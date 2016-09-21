@@ -1029,14 +1029,22 @@ else if ($pressreleaseID == -1) {
 						else {if (intval ($defaultPressesprecherID) == intval ($row->id)) { $checked = " selected "; } else { $checked = " "; } };
 				//Gespeicherten Presseverantwortlichen auswählen
 				} else {if ($pressagent==$row->id) { $checked = " selected "; } else {$checked="";};};
-				$pressagentHTML =  $pressagentHTML."<option $checked $disabled value=\"".$row->id."\" phone=\"".$phone."\" jobtitle=\"".$jobtitle."\">".$row->firstname." ".$row->lastname."</option>";
+				if ($disabled!='disabled'){
+					$pressagentHTML =  $pressagentHTML."<option $checked $disabled value=\"".$row->id."\" phone=\"".$phone."\" jobtitle=\"".$jobtitle."\">".$row->firstname." ".$row->lastname."</option>";
+				} else {
+					if ($checked != '') {
+						$pressagentHTML =  $pressagentHTML."<p value=\"".$row->id."\" phone=\"".$phone."\" jobtitle=\"".$jobtitle."\">".$row->firstname." ".$row->lastname."</p>";
+					}
 				}
-			}	
-	echo "<select name=\"pressagent\" id=\"pressagent\" class=\"rightCol\">";
+
+
+
+				}
+			}
+	if ($disabled!='disabled'){echo "<select name=\"pressagent\" id=\"pressagent\" class=\"rightCol\">";}
 	echo $pressagentHTML;
 	$pressagentHTML ="";
-	?>
-	</select>
+	if ($disabled!='disabled'){echo"</select>";}?>
 	</div></div>
 <!-- ############ ENDE Presseverantwortlicher: ################################################ -->
 
@@ -1127,8 +1135,13 @@ if ($pressreleaseID == -1) {
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3 class="panel-title">Betreff:</h3></div>
 	  <div class="panel-body">
-	 <? If ($disabled=='disabled'){$readonly='readonly';}else{$readonly='';}
-	 echo "<input name='Betreff' type='text' class='mainCol' value='$sqlBetreff' $readonly style='font-size: 16pt'>"; ?>
+	 <? If ($disabled=='disabled'){
+		$readonly='readonly';
+		echo "<p name='Betreff' style='font-size: 16pt'>$sqlBetreff</p>";}
+	   else	{
+		$readonly='';
+		echo "<input name='Betreff' type='text' class='mainCol' value='$sqlBetreff' $readonly style='font-size: 16pt'>";}
+	  ?>
 
 	 </div>
 	</div>
@@ -1137,11 +1150,21 @@ if ($pressreleaseID == -1) {
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3 class="panel-title">Text der Pressemitteilung:</h3></div>
 	  <div class="panel-body">
-	<? If ($disabled=='disabled'){$readonly='readonly';}else{$readonly='';}
-	  echo "<textarea name='body'  rows='30' class='mainCol' $readonly style='font-size: 16pt'>$sqlBody</textarea>";?>
+	<? If ($disabled=='disabled'){
+		$readonly='readonly';
+		echo "<p name='body' style='font-size: 16pt'>".nl2br($sqlBody)."</p>";
+		 }
+	else{
+		$readonly='';
+		echo "<textarea name='body'  rows='30' class='mainCol' $readonly style='font-size: 16pt'>$sqlBody</textarea>";}
+	 ?>
 	  
 	  <br/>
-	<?echo "<textarea name='contact' id='contact' class='mainCol' rows='4' $readonly>$sqlContact</textarea>";?>
+	<?If ($disabled=='disabled'){
+		echo "<p name='contact' style='font-size: 16pt'>".nl2br($sqlContact)."</p>";
+	} else {
+		echo "<textarea name='contact' id='contact' class='mainCol' rows='4' $readonly>$sqlContact</textarea>";
+	}?>
 	</div>
 	</div>
 
@@ -1213,7 +1236,11 @@ if ($pressreleaseID == -1) {
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3 class="panel-title">Tags:</h3></div>
 	  <div class="panel-body">
-	  <?echo "<input name='tags' type='text' class='mainCol' value='$sqlTags' placeholder='Transparenzgesetz, Gesetzenwurf, Gemüsesuppe' $disabled>";?>
+	<?php if ($disabled=='disabled'){
+		echo "<p name='tags' style='font-size: 16pt'>".nl2br($sqlTags)."</p>";
+	} else {
+		echo "<input name='tags' type='text' class='mainCol' value='$sqlTags' placeholder='Transparenzgesetz, Gesetzenwurf, Gemüsesuppe' $disabled>";
+	}?>
 	  </div>
 	</div>
 
