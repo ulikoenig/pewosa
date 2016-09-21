@@ -359,7 +359,7 @@ If (isset($_POST['Freigabe5']))
 			}	
 		$send_id='message.php?pressreleaseID='.$take;	
 		//echo "<tr><td class='cell' bgcolor='$color'><a href='$send_id'><span class='badge' title='$showsubjectlong'><Font size='3'>$showsubject</font></span>";
-		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$showsubject</font></a>";
+		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$showsubject (PM $take)</font></a>";
 
 		echo "<form action='message.php' method='post' style='display:inline;float: right;'>";
 		echo "<button align='right'type='submit' class='btn btn-primary' title='Zu den Details' name='pressreleaseID' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button>";
