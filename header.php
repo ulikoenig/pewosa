@@ -60,10 +60,6 @@ echo "<title>PeWoSa - $pagetitle</title>";
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style>
-body {
-	padding-top: 50px;
-}
-
 .mainCol {
 	width: 100%
 }
@@ -71,6 +67,14 @@ body {
 .rightCol {
 	width: 100%
 }
+<?php
+//Menu ausblenden, wenn PeWoSa App aufruft
+if($_SERVER['HTTP_USER_AGENT'] == "de.ulikoenig.pewosa/android"){
+echo ".navbar {display:none}\n";
+} else {
+echo "body { padding-top: 50px; }";
+}
+?>
 </style>
 </head>
 <body>
@@ -143,5 +147,7 @@ if ($loggedinadmin > "1") {
 		<div class="page-header">
 <?php
 echo "Angemeldet als <b>$loggedinusername</b><h1>$pagetitle</h1>";
+
+
 ?>
 </div>
