@@ -2,9 +2,11 @@
 $pagetitle='Pressemitteilungen';
 include_once("header.php");
 
-?>
-<meta http-equiv="refresh" content="30" > 
-<?
+//Kein Refresh, wenn PeWoSa App aufruft
+if($_SERVER['HTTP_USER_AGENT'] != "de.ulikoenig.pewosa/android"){
+echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
+}
+
 //Wir prüfen erstmal, ob es eine Speicherung für die Sortierung dieser Seite gibt
 //1=PMs, 2=Adressatenliste, 3=Verteilerliste, 4=Nutzerliste
 	$query = "SELECT * FROM sorting WHERE user_id=$loggedinuserid AND menu_id=1";
