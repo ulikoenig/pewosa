@@ -116,7 +116,7 @@ function runtime(){
 }
 
 
-If ($verbose){echo "Versand der E-Mails vorbereiten...";}
+If ($verbose){echo "Versand der E-Mails vorbereiten...\n";}
 $stillsending = true;
 
 /// Mutex Init
@@ -131,7 +131,7 @@ if(!flock($fp, LOCK_EX )) {
 }
 $counter=0;
 $pmid = 0;
-$query = "SELECT `pressrelease`.*, `users`.firstname, `users`.lastname, `users`.jobtitle, `users`.phone FROM `pressrelease`, `users` WHERE `pressrelease`.pressagentid = `users`.id AND senddate IS NOT NULL AND senddate >0 AND sendstate = -1 Order by id ASC LIMIT 1";
+$query = "SELECT `pressrelease`.*, `users`.firstname, `users`.lastname, `users`.jobtitle, `users`.phone FROM `pressrelease`, `users` WHERE `pressrelease`.pressagentid = `users`.id AND senddate IS NOT NULL AND senddate >0 AND sendstate = -1 AND senddate < CONVERT_TZ( NOW( ) , '".SQLSERVERTIMEZONE."', '".SQLLOCALTIMEZONE."' )  Order by id ASC LIMIT 1";
 $checkdata = mysql_query($query);
 if(mysql_num_rows($checkdata)>=1)
 	{
@@ -154,7 +154,7 @@ if(mysql_num_rows($checkdata)>=1)
 		}
 	} else $stillsending = false; // KEINE PMs mehr gefunden
 
-If ($verbose){echo "Habe $counter zu versendende PMs gefunden...";}
+If ($verbose){echo "Habe $counter zu versendende PMs gefunden...\n";}
 
 //Initialisieren von dem Array in dem wir alle angeschriebenen Mailadressen speichern
 $all_mails[0]="no@real.mail";
@@ -208,7 +208,7 @@ if ($pmid > 0) {
 
 					//Wir müssen alle benutzten Mails speichern, um zu vermeiden, dass wir an eine Mailadresse doppelt rausschicken
 					array_push($all_mails,$email);
-					If ($verbose){echo "PM $pmid wurde an $email aus dem Verteiler $distribution_id verschickt...";}
+					If ($verbose){echo "PM $pmid wurde an $email aus dem Verteiler $distribution_id verschickt...\n";}
 					}
 
 				}
@@ -260,7 +260,7 @@ if ($pmid > 0) {
 
 						//Wir müssen alle benutzten Mails speichern, um zu vermeiden, dass wir an eine Mailadresse doppelt rausschicken
 						array_push($all_mails,$email);
-						If ($verbose){echo "PM $pmid wurde an $email als Einzelempfänger verschickt...";}
+						If ($verbose){echo "PM $pmid wurde an $email als Einzelempfänger verschickt...\n";}
 						}
 					}
 				}
@@ -272,7 +272,7 @@ if ($pmid > 0) {
 	$email='presse@piratenfraktion-sh.de';
 	$name='Christian Lewin';
 	sendpm($subject,$body,$email,$name,$pdf,'0');
-	If ($verbose){echo "PM an Presse als Kopie verschickt...";}
+	If ($verbose){echo "PM an Presse als Kopie verschickt...\n";}
 
 	//PM als gesendet markieren
 	setpmsending($pmid,-2);
@@ -283,6 +283,6 @@ if ($pmid > 0) {
 }
 //Variable bereinigen
 unset ($all_mails);
-If ($verbose){echo "Ich bin hier fertig.";}
+If ($verbose){echo "Ich bin hier fertig.\n";}
 
 ?>
