@@ -130,17 +130,25 @@ include_once("header.php");
 			<th class='cell'>Adressaten</th>
 			<th class='cell'></th>
 			<th class='cell'></th>			
-		</tr><td colspan=42 ></td></tr>
+		</tr><td colspan=42 ></td></tr></table>
 	
 	<?
 	For ($i=1;$i<=$counter;$i++)
 		{
 		$take=$ids[$i];
 		If ($color=='#cccccc'){$color='#99ccff';}else{$color='#cccccc';}
-		echo "<tr><td class='cell' bgcolor='$color'><span class='badge'><Font size='3'>$name[$take]</Font></span></td>";
-		echo "<td class='cell' bgcolor='$color'>";
+		echo "<div class='panel panel-default'>";
+		$send_id='distribution_detail.php?'.$take;
+		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$name[$take]</font></a>";
+		echo "<form action='distribution_detail.php' method='post' style='display:inline;float: right;'>";
+		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='dist' value='$take'>";
+		echo "<span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form>";
+		//echo "<tr><td class='cell' bgcolor='$color'><span class='badge'><Font size='3'>$name[$take]</Font></span></td>";
+		//echo "<td class='cell' bgcolor='$color'>";
 		//Hier listen wir die Mitglieder auf
-		echo "<div class='scroll2'><Font size='2'>";
+		echo "</div>";
+		echo "<div class='panel-body'>";
+		echo "<Font size='2'>";
 		If ($counting[$take]>0)
 			{
 			$countit=0;	
@@ -162,25 +170,15 @@ include_once("header.php");
 			{
 			echo "Niemand";
 			}
-		
-		echo "</Font></td>";
+
 		$give_titel=$counting[$take].' Adressaten';
-		echo "<td class='cell' bgcolor='$color'><span class='badge' title='$give_titel'>$counting[$take]</span></td>";
-		echo "<td class='cell' bgcolor='$color'>";
-		echo "<form action='distribution_detail.php' method='post'>";
-		//echo "<input type='submit' value='Details' class='form-control'><INPUT type='hidden' id='dist' name='dist' value='$take'></form></td></tr><tr height=10><td></td></tr>";
-		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='dist' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form></td></tr><tr height=10><td></td></tr>";
+		echo "</Font><br><span class='badge' title='$give_titel'>$counting[$take]</span></div></div>";
+		
+
 		}
 	?>	
-	</table><br><table border=0 class="centred">
-	<tr><td colspan=42>
-	<?
-	//echo "<form action='distribution_detail.php' method='post'>";
-	//echo "<button type='submit' class='btn btn-primary' title='Neuen Verteiler anlegen' name='dist' value='xxx'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span> Neuen Verteiler anlegen</button></form>";
-	?>
-	</td></tr>
-	</table>
-	</div>
+
+	
 	  
 
 <?	
