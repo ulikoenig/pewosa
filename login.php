@@ -103,28 +103,28 @@ Pewosa - DAS Pressetool
 </td></tr>
 
 <tr><td class='cell' colspan=42 bgcolor='#99ccff'><Font size=3>
-<form action="?login=1" method="post">
-Benutzername:<br>
-<input type="username" size="40" maxlength="250" name="username"></Font</td></tr><tr><td class='cell' colspan=42 bgcolor='#99ccff'>
-<Font size=3> 
-Dein Passwort:<br>
-<input type="password" size="40"  maxlength="250" name="password"></Font></td></tr><tr><td class='cell' colspan=42 bgcolor='#99ccff' align='right'>
- 
-<button type='submit' class='btn btn-primary' title='Speichern' name='new' value='1'> Abschicken </button></td></tr></form>
-
-
-</td></tr>
-
-<tr><td class='cell' colspan=42 ><Font size=3><br>
-<a href='regcust.php'>Du möchtest unsere Pressemitteilungen bekommen?</a>
-<br><br>
-<a href='regnews.php'>Du möchtest unseren Newsletter bekommen?</a>
-<br><br>
-<a href='http://www.piratenfraktion-sh.de/impressum/'>Impressum</a>
-
-
-
-</Font>
+<?php
+//kein Loginformular für Android
+	if($_SERVER['HTTP_USER_AGENT'] != "de.ulikoenig.pewosa/android"){
+		?>
+		<form action="?login=1" method="post">
+		Benutzername:<br>
+		<input type="username" size="40" maxlength="250" name="username"></Font</td></tr><tr><td class='cell' colspan=42 			bgcolor='#99ccff'>
+		<Font size=3> 
+		Dein Passwort:<br>
+		<input type="password" size="40"  maxlength="250" name="password"></Font></td></tr><tr><td class='cell' colspan=42 bgcolor='#99ccff' align='right'>
+		<button type='submit' class='btn btn-primary' title='Speichern' name='new' value='1'> Abschicken </button></td></tr></form>
+		</td></tr>
+		<tr><td class='cell' colspan=42 ><Font size=3><br>
+		<a href='regcust.php'>Du möchtest unsere Pressemitteilungen bekommen?</a>
+		<br><br>
+		<a href='regnews.php'>Du möchtest unseren Newsletter bekommen?</a>
+		<br><br>
+		<a href='http://www.piratenfraktion-sh.de/impressum/'>Impressum</a>
+		</Font>
+		<?php
+	} 
+?>
 </td></tr>
 </table>
 </body>
