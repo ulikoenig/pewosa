@@ -865,8 +865,14 @@ else if ($pressreleaseID == -1) {
 					}
 
 
-
-				$distributionHTML =  $distributionHTML."<span title='$givetitle'><INPUT $checked $disabled type='checkbox' name=\"".$boxname."\"> ".$row->name."</span><br> ";
+				if ($disabled) {
+					//nichts mehr zu ändern
+					if ($checked){
+						$distributionHTML =  $distributionHTML."<p>".$row->name."</p>\n";
+					}
+				} else {
+					//Benutzer kann noch auswählen
+					$distributionHTML =  $distributionHTML."<span title='$givetitle'><INPUT $checked $disabled type='checkbox' name=\"".$boxname."\"> ".$row->name."</span><br> ";}
 				}
 			}
 	//echo "<select name=\"distribution\" size=\"".$counter."\" multiple class=\"rightCol\">";
@@ -918,7 +924,15 @@ else if ($pressreleaseID == -1) {
 					//Mail wird im Array gespeichert um Dopplunge zu vermeiden
 					array_push($all_mails,$row->email);
 					//Dann Ausgabe
-					$distributionHTML =  $distributionHTML."<span title='$givetitle'><INPUT type='checkbox' $checked $disabled name=\"".$boxname."\"> ".$row->email." </span><br>";
+					if ($disabled) {
+						//nichts mehr zu ändern
+						if ($checked){
+							$distributionHTML =  $distributionHTML."<p>".$row->email."</p>";
+						}
+					} else {
+						//Benutzer kann noch ändern				
+						$distributionHTML =  $distributionHTML."<span title='$givetitle'><INPUT type='checkbox' $checked $disabled name=\"".$boxname."\"> ".$row->email." </span><br>";
+					} 
 					}
 				}
 			}
@@ -963,8 +977,15 @@ else if ($pressreleaseID == -1) {
 					if ($loggedinuserid == $row->id) { $checked = " checked "; } else {$checked="";};
 				} else if ($distributor[$row->id]==true) { $checked = " checked "; } else {$checked="";};
 				
-
-				$distributorHTML =  $distributorHTML."<INPUT type='checkbox' $checked $disabled name=\"".$boxname."\" id=\"".$boxname."\" phone=\"".$phone."\" naturalname=\"".$row->firstname." ".$row->lastname."\" jobtitle=\"".$jobtitle."\"> ".$row->firstname." ".$row->lastname."<br>";
+				if ($disabled){
+					if ($checked){
+						//Benutzer kann nicht ändern
+						$distributorHTML =  $distributorHTML."<p> ".$row->firstname." ".$row->lastname."</p>";
+					}
+				} else {
+					//Benutzer kann noch ändern
+					$distributorHTML =  $distributorHTML."<INPUT type='checkbox' $checked $disabled name=\"".$boxname."\" id=\"".$boxname."\" phone=\"".$phone."\" naturalname=\"".$row->firstname." ".$row->lastname."\" jobtitle=\"".$jobtitle."\"> ".$row->firstname." ".$row->lastname."<br>";
+				}
 				}
 			}
 	echo "<input type=\"hidden\" name=\"distributormaxid\" id=\"distributormaxid\" value=\"".$distributormaxid."\">";		
