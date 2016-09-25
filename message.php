@@ -4,6 +4,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 $pagetitle= "Pressemitteilung Bearbeiten";
 include_once("header.php");
+include_once("pushmsg.php");
 function fetchintvar ($varname,$defaultvalue)
 {	
 	If (isset($_POST[$varname])) 
@@ -645,7 +646,9 @@ If (($action=='Freigeben') && userIsPressagend($loggedinuserid) ){
 
 		$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='-3', sendagent=$loggedinuserid WHERE id='$sqlpressreleaseID';";
 		$send = mysql_query($query) or die("Fehler X:".mysql_error());
-		echo "<button type='button' class='btn btn-success'>Freigegeben</button>";	
+		echo "<button type='button' class='btn btn-success'>Freigegeben</button>";
+		//pushnotification
+		newPMReleaseRequest($pressreleaseID);
 	} 
 
 //Die Sendefreigabe wird auf die Messagelist umgeleitet und steht deshalb nicht hier
@@ -657,6 +660,9 @@ If (($action=='Freigeben') && userIsPressagend($loggedinuserid) ){
 
 If ($action=='edit') {
 	$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='0', sendagent=-1, confirmationid1=-1, confirmationid1bypressagent=-1, confirmationid2=-1, confirmationid2bypressagent=-1 WHERE id='$sqlpressreleaseID';";
+	
+	//pushnotification löschen
+	removePMReleaseRequest ($pressreleaseID);
 	$send = mysql_query($query) or die("Fehler Edit:".mysql_error());
 }
 
