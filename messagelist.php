@@ -1,6 +1,7 @@
 <?
 $pagetitle='Pressemitteilungen';
 include_once("header.php");
+include_once("pushmsg.php");
 
 //Kein Refresh, wenn PeWoSa App aufruft
 if($_SERVER['HTTP_USER_AGENT'] != "de.ulikoenig.pewosa/android"){
@@ -28,8 +29,29 @@ echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
 		$menu_point=1;
 		$menu_direction=0;
 		$query = "INSERT INTO `pewosa`.`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",1,".$menu_point.",".$menu_direction.")";
-		$send = mysql_query($query) or die("Fehler:".mysql_error());	
+		$send = mysql_query($query) or die("Fehler:".mysql_error());
 		}
+
+	//Hier schauen wir noch, ob es ein-ausblenden schon gibt
+	$query = "SELECT * FROM sorting WHERE user_id=$loggedinuserid AND menu_id=7";
+	$checkdata = mysql_query($query);
+	if(mysql_num_rows($checkdata)==1)
+		{
+		//Es gibt eine gespeicherte Sortierung, also lesen wir sie aus
+		while($row = mysql_fetch_object($checkdata))
+			{
+			//Nach diesem Menüpunkt wird sortiert...
+			$menu_check=$row->menu_direction;
+			}
+		}
+	else
+		{
+		//Es gibt noch keine Speicherung für diesen Nutzer und dieses Menü? - Dann legen wir eine fest und in der Datenbank an
+		$query = "INSERT INTO `pewosa`.`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",7,1,0)";
+		$send = mysql_query($query) or die("Fehler:".mysql_error());
+		$menu_check='0';	
+		}
+
 
 
 	//Nutzer will Sortierung verändern? -Na dann hier lang!
@@ -46,6 +68,18 @@ echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
 		$menu_direction=$dir;					
 		}
 
+
+	//Nutzer will ein-ausblenden? -Na dann hier lang!
+	If (isset($_POST['blending']))
+		{
+		//$take=$_POST['blending'];
+		If ($menu_check==1){$take=0;}else{$take=1;}
+		$change = "UPDATE sorting Set menu_direction='".$take."' WHERE user_id=$loggedinuserid AND menu_id=7";
+		$update = mysql_query($change)or die("Fehler.".mysql_error());
+		//Natürlich müssen wir nun auch anpassen
+		$menu_check=$take;
+		//echo "test $take";				
+		}
 
 
 //Freigaben eintragen
@@ -79,7 +113,11 @@ If (isset($_POST['Freigabe1']))
 		{
 		//Freigabe erfolgt
 		$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid1='$loggedinuserid' WHERE id='$Freigabe1';";
-		$send = mysql_query($query) or die("Fehler:".mysql_error());		
+		$send = mysql_query($query) or die("Fehler:".mysql_error());
+		//pushnotification Freigabe 1 löschen
+		removePMReleaseRequest ($Freigabe1);
+		//pushnotification Freigabe 2 setzen
+		newPM2ndReleaseRequest ($Freigabe1);		
 		}
 	}
 If (isset($_POST['Freigabe2']))
@@ -106,7 +144,9 @@ If (isset($_POST['Freigabe2']))
 		//2te Freigabe erfolgt
 		//Damit wird auch automatisch sendstate auf pending gesetzt
 		$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid2='$loggedinuserid', sendstate=-1 WHERE id='$Freigabe2';";
-		$send = mysql_query($query) or die("Fehler:".mysql_error());	
+		$send = mysql_query($query) or die("Fehler:".mysql_error());
+		//pushnotification Freigabe 2 löschen
+		removePM2ndReleaseRequest($Freigabe2);
 		}		
 	}
 
@@ -118,7 +158,11 @@ If (isset($_POST['Freigabe3']))
 	$Freigabe4=$_POST['Freigabe4'];
 	//Hier müssten eigentlich noch Sicherheitstests geben
 	$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid1bypressagent='$loggedinuserid', confirmationid1='$Freigabe3' WHERE id='$Freigabe4';";
-	$send = mysql_query($query) or die("Fehler:".mysql_error());	
+	$send = mysql_query($query) or die("Fehler:".mysql_error());
+	//pushnotification Freigabe 1 löschen
+	removePMReleaseRequest ($Freigabe4);
+	//pushnotification Freigabe 2 setzen
+	newPM2ndReleaseRequest ($Freigabe4);	
 	}
 
 //Freigabe2	
@@ -128,7 +172,9 @@ If (isset($_POST['Freigabe5']))
 	$Freigabe6=$_POST['Freigabe6'];
 	//Hier müssten eigentlich noch Sicherheitstests geben
 	$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid2bypressagent='$loggedinuserid', confirmationid2='$Freigabe5', sendstate=-1 WHERE id='$Freigabe6';";
-	$send = mysql_query($query) or die("Fehler:".mysql_error());	
+	$send = mysql_query($query) or die("Fehler:".mysql_error());
+	//pushnotification Freigabe 2 löschen
+	removePM2ndReleaseRequest($Freigabe6);
 	}	
 	
 	//Laden aller Pressemitteilungen
@@ -230,19 +276,22 @@ If (isset($_POST['Freigabe5']))
 		{	
 		while($row = mysql_fetch_object($checkdata))
 			{
-			$counter++;
-			$ids[$counter]=$row->id;
-			$subject[$row->id]=$row->subject;
-			$body[$row->id]=$row->body;
-			$senddate[$row->id]=$row->senddate;
-			$confirmationid1[$row->id]=$row->confirmationid1;
-			$confirmationid2[$row->id]=$row->confirmationid2;
-			$confirmationid1bypressagent[$row->id]=$row->confirmationid1bypressagent;
-			$confirmationid2bypressagent[$row->id]=$row->confirmationid2bypressagent;			
-			$pressagentid[$row->id]=$row->pressagentid;
-			$sendagent[$row->id]=$row->sendagent;
-			$sendstate[$row->id]=$row->sendstate;
-			$tags[$row->id]=$row->tags;
+			If (($menu_check==1 AND $row->sendstate!=-2) OR ($menu_check==0))
+				{
+				$counter++;
+				$ids[$counter]=$row->id;
+				$subject[$row->id]=$row->subject;
+				$body[$row->id]=$row->body;
+				$senddate[$row->id]=$row->senddate;
+				$confirmationid1[$row->id]=$row->confirmationid1;
+				$confirmationid2[$row->id]=$row->confirmationid2;
+				$confirmationid1bypressagent[$row->id]=$row->confirmationid1bypressagent;
+				$confirmationid2bypressagent[$row->id]=$row->confirmationid2bypressagent;			
+				$pressagentid[$row->id]=$row->pressagentid;
+				$sendagent[$row->id]=$row->sendagent;
+				$sendstate[$row->id]=$row->sendstate;
+				$tags[$row->id]=$row->tags;
+				}
 			}
 		}
 	
@@ -335,7 +384,13 @@ If (isset($_POST['Freigabe5']))
 	If ($menu_point==9 AND $menu_direction==0){echo "<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>";}
 	If ($menu_point==9 AND $menu_direction==1){echo "<span class='glyphicon glyphicon-chevron-up' aria-hidden='true'></span>";}
 	//If ($menu_point!=9){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
-	echo " Status </button></form><br><br>";
+	echo " Status </button></form>";
+
+	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
+	//echo "<button type='submit' class='btn btn-info' title='Versandte PMs ein-/ausblenden' name='blending' value='1'>";
+	If ($menu_check==0){echo "<input type='checkbox' onchange='submit();'>";}
+	If ($menu_check==1){echo "<input type='checkbox' onchange='submit();' checked>";}
+	echo "<input type='hidden' name='blending' value='1'> Versandte PMs ein-/ausblenden</form><br><br>";
 ?>
 	</td>	
 		</tr></table>
