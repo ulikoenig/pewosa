@@ -113,18 +113,16 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 	//If ($menu_point!=2){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
 	echo " Sendedatum </button></form><br><br>";
 ?>
-	</td></tr>
+	</td></tr></Table>
 	
-		<tr height=20>
-			<th class='cell'>Betreff</th>
-			<th class='cell'>versandt</th>			
-		</tr><td colspan=42 ></td></tr>
+
 		
 <?
 	
 	For ($i=1;$i<=$counter;$i++)
 		{
 		$take=$ids[$i];
+		echo "<div class='panel panel-default'>";
 		If ($color=='#cccccc'){$color='#99ccff';}else{$color='#cccccc';}
 		$showsubject=$subject[$take];
 		$showsubjectlong="";
@@ -135,32 +133,32 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 			$showsubjectlong = htmlspecialchars ($showsubject);
 			$showsubject = preg_replace("/[^ ]*$/", '.', substr($showsubject, 0, $length));
 			}	
-		$send_id='newsletter.php?id='.$take;	
-		echo "<tr><td class='cell' bgcolor='$color'><a href='$send_id'><span class='badge' title='$showsubjectlong'><Font size='3'>$showsubject</font></span>";
-			
+		$send_id='newsletter.php?id='.$take;
+		echo "<div class='panel-heading'>";	
+		echo "<a href='$send_id'><Font size='4'>$showsubject</font></a>";
+		echo "<div align='right'><form action='newsletter_detail.php' method='post'>";
+		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='newsletter' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button>";
+		echo "</form></div></div>";
+		echo "<div class='panel-body'>";
 				
 		
 		If ($send[$take]!='-1')
 			{
 			$d_show = date("d.m.Y H:i",strtotime($senddate[$take]));
-			echo "<td class='cell' bgcolor='$color'>$d_show";
-			echo "<td class='cell' bgcolor='$color'>";
+			echo "<br>Versand: $d_show";
+			echo "<div align='right'>";
 			If ($sendstate[$take]=='-1'){echo "<button type='button' class='btn btn-warning' title='Warte auf Versand' disabled><span class='glyphicon glyphicon-hourglass' aria-hidden='true'></span></button>";}
 			If ($sendstate[$take]=='1'){echo "<button type='button' class='btn btn-success' title='Versand erfolgreich' disabled><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";}
 			If ($sendstate[$take]>1){echo "<button type='button' class='btn btn-info' title='Versand wird ausgeführt' disabled><span class='glyphicon glyphicon-log-out' aria-hidden='true' ></span></button>";}
-			echo "</td></td>";
+			//echo "</td></td>";
 			}
 		else
 			{
-			echo "<td class='cell' bgcolor='$color'>Nicht versand</td><td class='cell' bgcolor='$color'></td>";	
+			echo "Nicht versand";	
 			}
-		echo "<td class='cell' bgcolor='$color'></td>";				
-		echo "<td class='cell' bgcolor='$color'>";
-		echo "<form action='newsletter_detail.php' method='post'>";
-		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='newsletter' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button>";
-		echo "</form></td></tr>";
-		echo "</td></tr><tr height=10>";		
-		echo "<td colspan=42 align='center'></td></tr>";
+
+		echo "</div></div></div>";
+
 		}
 		
 	?>	
