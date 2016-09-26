@@ -9,10 +9,10 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
     include_once("password.php");
 }
 	
-	If (isset($_POST['user']))
+	If (isset($_POST['user']) OR isset($_GET['user']))
 		{
 		$take=$_POST['user'];
-
+		If (isset($_GET['user'])){$take=$_GET['user'];}
 		If (isset($_POST['safe']) AND $take!='xxx')
 			{
 			//Eintrag anpassen, falls bereits vorhanden
@@ -88,7 +88,7 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 				}
 			}	
 		}
-	If (!isset($_POST['user']) OR $take=='xxx')
+	If ((!isset($_POST['user']) AND !isset($_GET['user'])) OR $take=='xxx')
 		{
 		//Kein Datensatz festgelegt oder neu? - Erstmal Standardangaben zeigen	
 		$firstname='';
