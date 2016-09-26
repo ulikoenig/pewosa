@@ -123,7 +123,8 @@ include_once("header.php");
 ?>
 
 	</td></tr>
-	</table>
+
+</table>
 	
 	<?
 	For ($i=1;$i<=$counter;$i++)
@@ -131,9 +132,9 @@ include_once("header.php");
 		$take=$ids[$i];
 		If ($color=='#cccccc'){$color='#99ccff';}else{$color='#cccccc';}
 		echo "<div class='panel panel-default'>";
-		$send_id='distribution_detail.php?'.$take;
+		$send_id='distribution_detail.php?dist='.$take;
 		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$name[$take]</font></a>";
-		echo "<form action='distribution_detail.php' method='post' style='display:inline;float: right;'>";
+		echo "<form action='distribution_detail.php' method='post' style='float: right;'>";
 		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='dist' value='$take'>";
 		echo "<span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form>";
 		//echo "<tr><td class='cell' bgcolor='$color'><span class='badge'><Font size='3'>$name[$take]</Font></span></td>";
