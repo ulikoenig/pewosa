@@ -9,9 +9,10 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
     include_once("password.php");
 }
 	
-	If (isset($_POST['user']))
+	If (isset($_POST['user']) OR isset($_GET['user']))
 		{
 		$take=$_POST['user'];
+		If (isset($_GET['user'])){$take=$_GET['user'];}
 
 		If (isset($_POST['safe']) AND $take!='xxx')
 			{
@@ -68,19 +69,23 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 	
 	?>
 	<div id="mainview" >
+
 	<table border=0 class="centred"><tr><td align='left'>
 	<?
 	echo "<form action='nlabo_detail.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-primary' title='Neuen Abonennten anlegen' name='cust' value='xxx'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span> Neuen Abonnenten anlegen</button></form>";
 	echo " <form action='nlabo.php' method='post' style='display:inline;'>";
 	echo "<button Hspace='5' type='submit' class='btn btn-info' title='Zur Übersicht' name='' value=''><span class='glyphicon glyphicon-share' aria-hidden='true'></span> Zurück zur Übersicht</button></form></td><td  colspan=2 bgcolor='#99ccff' align='right'></form>";						
-	echo "</td><td width='20'></td><td align='right'>";
+	echo "</td><td width='20'></td><td align='right'></table><br>";
 	
+	echo "<div class='panel panel-default'>";
+	echo "<div class='panel-heading'><Font size='4'>$firstname $lastname</Font></div>";
+	echo "<div class='panel-body'>";
 
 				
 			echo "<form action='nlabo_detail.php' method='post'>";	
 			?>
-			</table><br><table border=0 class="centred">		
+			<br><table border=0 class="centred">		
 			<tr height=20>
 			<th class='cell' colspan=2 bgcolor='#cccccc'>Name</th>
 			<th class='cell' colspan=2 bgcolor='#cccccc'>Nachname</th>
@@ -114,7 +119,7 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 			
 			?>	
 
-		</tr></table>
+		</tr></table></div></div>
 
 	</div>
 <?	
