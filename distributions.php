@@ -123,14 +123,7 @@ include_once("header.php");
 ?>
 
 	</td></tr>
-
-	
-		<tr height=20>
-			<th class='cell'>Verteilername</th>
-			<th class='cell'>Adressaten</th>
-			<th class='cell'></th>
-			<th class='cell'></th>			
-		</tr><td colspan=42 ></td></tr></table>
+	</table>
 	
 	<?
 	For ($i=1;$i<=$counter;$i++)
