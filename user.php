@@ -1,4 +1,5 @@
-<?
+<?php
+
 $pagetitle='Benutzer Bearbeiten';
 include_once("header.php");
 if($loggedinadmin < "1")
@@ -49,24 +50,44 @@ if($loggedinadmin < "1")
 
 
 
-	If (isset($_POST['user']) AND isset($_POST['delete']))
+	If (isset($_POST['user']) AND (isset($_POST['delete']) OR isset($_POST['activate'])))
 		{
 		$take=$_POST['user'];
 		$updatedate = date('Y-m-d G:i:s');
-		$deleteuserid=$_SESSION['userid'];			
-		$change = "UPDATE users Set deleted='1', deleteuserid='".$deleteuserid."',updated_at='".$updatedate."' WHERE id='$take'";
+		$deleteuserid=$_SESSION['userid'];
+		If (isset($_POST['activate'])){$delete='0';}else{$delete='1';}
+		$change = "UPDATE users Set deleted='".$delete."', deleteuserid='".$deleteuserid."',updated_at='".$updatedate."' WHERE id='$take'";
 		$update = mysql_query($change)or die("Deaktivieren leider fehlgeschlagen.".mysql_error());
 		}
 
-	If (isset($_POST['user']) AND isset($_POST['activate']))
+
+	If (isset($_POST['user']) AND (isset($_POST['ddell']) OR isset($_POST['dactiv'])))
 		{
 		$take=$_POST['user'];
 		$updatedate = date('Y-m-d G:i:s');
-		$deleteuserid=$_SESSION['userid'];			
-		$change = "UPDATE users Set deleted='0', deleteuserid='".$deleteuserid."',updated_at='".$updatedate."' WHERE id='$take'";
+		If (isset($_POST['dactiv'])){$d='0';}else{$d='1';}
+		$change = "UPDATE users Set distributor='".$d."', updated_at='".$updatedate."' WHERE id='$take'";
+		$update = mysql_query($change)or die("Deaktivieren leider fehlgeschlagen.".mysql_error());
+		}
+
+	If (isset($_POST['user']) AND (isset($_POST['pdell']) OR isset($_POST['pactiv'])))
+		{
+		$take=$_POST['user'];
+		$updatedate = date('Y-m-d G:i:s');
+		If (isset($_POST['pactiv'])){$d='0';}else{$d='1';}
+		$change = "UPDATE users Set pressagent='".$d."', updated_at='".$updatedate."' WHERE id='$take'";
 		$update = mysql_query($change)or die("Deaktivieren leider fehlgeschlagen.".mysql_error());
 		}
 		
+	If (isset($_POST['user']) AND (isset($_POST['adell']) OR isset($_POST['aactiv'])))
+		{
+		$take=$_POST['user'];
+		$updatedate = date('Y-m-d G:i:s');
+		If (isset($_POST['aactiv'])){$d='0';}else{$d='1';}
+		$change = "UPDATE users Set admin='".$d."', updated_at='".$updatedate."' WHERE id='$take'";
+		$update = mysql_query($change)or die("Deaktivieren leider fehlgeschlagen.".mysql_error());
+		}
+
 	$counter=0;
 	$query = "SELECT username, firstname, lastname, distributor, pressagent, jobtitle, phone, cellphone, admin, created_at, updated_at, deleted, id FROM users";
 
@@ -182,34 +203,39 @@ if($loggedinadmin < "1")
 		echo "<div class='panel-body'>";
 
 
-
+		echo "<form action='user.php' method='post' style='display:inline;'>";
+		echo "<INPUT type='hidden' id='user' name='user' value='$take'>";
 		If ($distributor[$take]==1)
 			{
-			$show="Freigabe <button type='button' class='btn btn-success' title='Darf freigeben'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";		
+			$show="Freigabe <button type='submit' class='btn btn-success' name='dactiv' title='Darf freigeben'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";		
 			}
 		else
 			{
-			$show="Freigabe <button type='button' class='btn btn-info' title='Darf nicht freigeben'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Freigabe <button type='submit' class='btn btn-info' name='ddell' title='Darf nicht freigeben'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}
-		echo "$show ";
+		echo "$show </form>";
+		echo "<form action='user.php' method='post' style='display:inline;'>";
+		echo "<INPUT type='hidden' id='user' name='user' value='$take'>";
 		If ($pressagent[$take]==1)
 			{
-			$show="Versand <button type='button' class='btn btn-success' title='Darf versenden'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
+			$show="Versand <button type='submit' class='btn btn-success' name='pactiv' title='Darf versenden'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
 			}
 		else
 			{
-			$show="Versand <button type='button' class='btn btn-info' title='Darf nicht versenden'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Versand <button type='submit' class='btn btn-info' name='pdell' title='Darf nicht versenden'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}
-		echo "$show ";
+		echo "$show </form>";
+		echo "<form action='user.php' method='post' style='display:inline;'>";
+		echo "<INPUT type='hidden' id='user' name='user' value='$take'>";
 		If ($admin[$take]==1)
 			{
-			$show="Admin <button type='button' class='btn btn-success' title='Hat Adminstatus'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
+			$show="Admin <button type='submit' class='btn btn-success' name='aactiv' title='Hat Adminstatus'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
 			}
 		else
 			{
-			$show="Admin <button type='button' class='btn btn-info' title='Hat keinen Adminstatus'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Admin <button type='submit' class='btn btn-info' name='adell' title='Hat keinen Adminstatus'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}		
-		echo "$show ";
+		echo "$show </form>";
 		echo "<form action='user.php' method='post'>";
 		echo "<INPUT type='hidden' id='user' name='user' value='$take'>";
 		If ($deleted[$take]==1)
