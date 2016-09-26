@@ -20,11 +20,11 @@ include_once("header.php");
 			}
 		}	
 	
-	If (isset($_POST['dist']))
+	If (isset($_POST['dist']) OR isset($_GET['dist']))
 		{
 		//Hier schnappt er sich die Verteilerlistennummer	
 		$take=$_POST['dist'];
-
+		If (isset($_GET['dist'])){$take=$_GET['dist'];}
 		//Nun laden wir alle Mitglieder dieser Gruppe
 		$counting=0;
 		$customer_id[0]=0;
@@ -129,7 +129,7 @@ include_once("header.php");
 				}
 			}	
 		}
-	If (!isset($_POST['dist']) OR $take=='xxx')
+	If ((!isset($_POST['dist']) AND !isset($_GET['dist'])) OR $take=='xxx')
 		{
 		//Kein Datensatz festgelegt oder neu? - Erstmal Standardangaben zeigen	
 		$name='';		
