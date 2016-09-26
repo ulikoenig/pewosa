@@ -164,73 +164,72 @@ if($loggedinadmin < "1")
 	echo " Benutzername </button></form><br><br>";
 
 ?>
-	</td></tr>	
-		<tr height=30>
-			<th class='cell'>Name</th>
-			<th class='cell'>Benutzername</th>
-			<th class='cell'>Freigabe</th>
-			<th class='cell'>Versand</th>
-			<th class='cell'>Admin</th>			
-			<th class='cell'>Aktiviert</th>
-		</tr><td colspan=42 ></td></tr>
+	</td></tr></table>	
+
 		
 
 <?	
 	For ($i=1;$i<=$counter;$i++)
 		{
 		$take=$ids[$i];
-		If ($color=='#cccccc'){$color='#99ccff';}else{$color='#cccccc';}
-		echo "<tr><td class='cell' bgcolor='$color'><span class='badge'><Font size='3'>$lastname[$take], $firstname[$take] </Font></span></td>";
-		echo "<td class='cell' bgcolor='$color'>$username[$take]</td>";
+		$send_id='user_detail.php?user='.$take;
+		echo "<div class='panel panel-default'>";
+		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$lastname[$take], $firstname[$take] ($username[$take])</font></a>";
+
+		echo "<div align='right'><form action='user_detail.php' method='post'>";
+		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='user' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form></div></div>";
+
+		echo "<div class='panel-body'>";
+
+
+
 		If ($distributor[$take]==1)
 			{
-			$show="<button type='button' class='btn btn-success' title='Darf freigeben'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";		
+			$show="Freigabe <button type='button' class='btn btn-success' title='Darf freigeben'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";		
 			}
 		else
 			{
-			$show="<button type='button' class='btn btn-info' title='Darf nicht freigeben'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Freigabe <button type='button' class='btn btn-info' title='Darf nicht freigeben'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}
-		echo "<td class='cell' bgcolor='$color'>$show</td>";
+		echo "$show ";
 		If ($pressagent[$take]==1)
 			{
-			$show="<button type='button' class='btn btn-success' title='Darf versenden'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
+			$show="Versand <button type='button' class='btn btn-success' title='Darf versenden'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
 			}
 		else
 			{
-			$show="<button type='button' class='btn btn-info' title='Darf nicht versenden'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Versand <button type='button' class='btn btn-info' title='Darf nicht versenden'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}
-		echo "<td class='cell' bgcolor='$color'>$show</td>";
+		echo "$show ";
 		If ($admin[$take]==1)
 			{
-			$show="<button type='button' class='btn btn-success' title='Hat Adminstatus'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
+			$show="Admin <button type='button' class='btn btn-success' title='Hat Adminstatus'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
 			}
 		else
 			{
-			$show="<button type='button' class='btn btn-info' title='Hat keinen Adminstatus'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Admin <button type='button' class='btn btn-info' title='Hat keinen Adminstatus'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}		
-		echo "<td class='cell' bgcolor='$color'>$show</td>";
+		echo "$show ";
+		echo "<form action='user.php' method='post'>";
+		echo "<INPUT type='hidden' id='user' name='user' value='$take'>";
 		If ($deleted[$take]==1)
 			{
-			$show="<button type='button' class='btn btn-danger' title='Ist deaktiviert'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
+			$show="Deaktiviert <button type='submit' class='btn btn-danger' name='activate' title='Ist deaktiviert'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
 			}
 		else
 			{
-			$show="<button type='button' class='btn btn-success' title='Ist aktiviert'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
+			$show="Aktiviert <button type='submit' class='btn btn-success' name='delete' title='Ist aktiviert'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";
 			}
-		echo "<td class='cell' bgcolor='$color'>$show</td>";		
-		echo "<td class='cell' bgcolor='$color'>";
-		echo "<form action='user_detail.php' method='post'>";
-		echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='user' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form></td></tr>";
-		echo "</td></tr><tr height=10>";		
-		echo "<td colspan=42 align='center'></td></tr>";
+		echo "<div align='right'>$show </div></form>";			
+		echo "</div></div>";
 		}
 		
 	?>	
-	</table><br><table border=0 class="centred">
-	<tr><td colspan=42 >
 
-	</td></tr>
-	</table>
+
+
+
+
 	</div>
 	  
 <?	
