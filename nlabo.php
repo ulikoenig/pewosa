@@ -151,27 +151,30 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 	//If ($menu_point!=3){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
 	echo " E-Mail </button></form><br><br>";
 ?>
-	</td></tr>	
-		<tr height=30>
-			<th class='cell'>Name</th>
-			<th class='cell'>E-mail</th>	
-			<th class='cell'>Aktiviert</th>
-		</tr><td colspan=42 ></td></tr>
+	</td></tr></table>	
+
 		
 
 <?	
 	For ($i=1;$i<=$counter;$i++)
 		{
 		$take=$ids[$i];
-		If ($color=='#cccccc'){$color='#99ccff';}else{$color='#cccccc';}
-		echo "<tr><td class='cell' bgcolor='$color'><span class='badge'><Font size='3'>";
+		echo "<div class='panel panel-default'>";
+		//If ($color=='#cccccc'){$color='#99ccff';}else{$color='#cccccc';}
+		$send_id='nlabo_detail.php?user='.$take;
+		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>";
 		echo "$i. ";
 		If ($lastname[$take]!=''){echo "$lastname[$take], ";}
 		If ($firstname[$take]!=''){echo "$firstname[$take]";}
+		If ($lastname[$take]=='' AND $firstname[$take]==''){echo "Kein Name gespeichert";}
 		//echo "$lastname[$take], $firstname[$take] ";
-		echo "</Font></span></td>";
-		echo "<td class='cell' bgcolor='$color'>$email[$take]</td>";
-		echo "<form action='nlabo.php' method='post'>";
+		echo "</Font></a><div align='right'>";
+		echo "<form action='nlabo_detail.php' method='post' style='display:inline;'><button type='submit' class='btn btn-primary' title='Zu den Details' name='user' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form></div></div>";	
+		
+		echo "<div class='panel-body'>";
+
+		echo "$email[$take]";
+		echo "<div align='right'><form action='nlabo.php' method='post'>";
 		If ($active[$take]==1)
 			{
 			$show="<input type='submit' class='btn btn-success' title='Bekommt den Newsletter' value='Im Verteiler'>";		
@@ -181,14 +184,13 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 			$show="<input type='submit' class='btn btn-warning' title='Bekommt keinen Newsletter' value='Inaktiv'>";
 			}
 		
-		echo "<td class='cell' bgcolor='$color'>$show</td>";
+
 		echo "<Input type='hidden' name='change' value='$active[$take]'>";
-		echo "<Input type='hidden' name='cust' value='$take'>";
-		echo "</form>";
-		echo "<td class='cell' bgcolor='$color'>";
-		echo "<form action='nlabo_detail.php' method='post' style='display:inline;'><button type='submit' class='btn btn-primary' title='Zu den Details' name='user' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button></form></td></tr>";				
+		echo "<Input type='hidden' name='cust' value='$take'>$show";
+		echo "</form></div>";
+		
 				
-		echo "</td></tr>";
+		echo "</div></div>";
 		}
 		
 	?>	
