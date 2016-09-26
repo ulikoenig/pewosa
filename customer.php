@@ -171,56 +171,40 @@ include_once("header.php");
 	echo "<br><br>";
 
 ?>
-	</td></tr>
+	</td></tr></table>
 	
-		<tr height=20>
-			<th class='cell'>Name</th>
-			<th class='cell'>Unternehmen</th>
-			<th class='cell'>Telefon</th>
-			<th class='cell'>E-Mail</th>
-			<th class='cell'></th>
-		</tr><td colspan=42 ></td></tr>
+
 	<?
 	For ($i=1;$i<=$counter;$i++)
 		{	
 		$take=$ids[$i];
+		$send_id='customer_detail.php?cust='.$take;
+		echo "<div class='panel panel-default'>";
 		If (($loggedinadmin < "1" AND $deleted[$take]!=1) OR ($loggedinadmin > "1"))
 			{		
-			If ($color=='cell-even'){$color='cell-uneven';}else{$color='cell-even';}
-			echo "<tr><td class='cell $color'><span class='badge'><Font size='3'>";
+			//If ($color=='cell-even'){$color='cell-uneven';}else{$color='cell-even';}
+			//echo "<tr><td class='cell $color'><span class='badge'><Font size='3'>";
+			echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>";
 			If ($lastname[$take]!=''){echo "$lastname[$take], ";}
 			If ($firstname[$take]!=''){echo "$firstname[$take]";}
-			echo "</font></span></td>";
-		
-			echo "<td class='cell $color'>$company[$take]</td>";
-			echo "<td class='cell $color'>";
+			If ($lastname[$take]=='' AND $firstname[$take]==''){echo "Kein Name gespeichert";}
+			echo "</font></a>";
+			echo "<div align='right'><form action='customer_detail.php' method='post'>";
+			echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='customer' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button>";
+			echo "</form></div>";
+			echo "</div>";
+			echo "<div class='panel-body'>";
+			echo "<br>Unternehmen: $company[$take]";
+			//echo "<br>";
 			If ($phone[$take]!=''){echo "<a href='tel:$phone[$take]'>$phone[$take]</a> ";}else{echo " - ";}
 			If ($cellphone[$take]!=''){echo "| <a href='tel:$cellphone[$take]'>$cellphone[$take]</a>";}
-			echo"</td>";
-			echo "<td class='cell $color'>$email[$take]</td><td class='cell $color'>";
-
-			if ($loggedinadmin > "1") {
-			echo "<form action='customer.php' method='post'>";
-			If ($deleted[$take]!=1)
-				{
-				$show="<input type='submit' class='btn btn-success' title='Bekommt Pressemitteilungen' value='Im Verteiler'>";		
-				}
-			else
-				{
-				$show="<input type='submit' class='btn btn-warning' title='Bekommt keine Pressemitteilungenr' value='Inaktiv'>";
-				}
-		
-			echo "<td class='cell $color'>$show</td>";
-			echo "<Input type='hidden' name='change' value='$deleted[$take]'>";
-			echo "<Input type='hidden' name='cust' value='$take'>";
-			echo "</form>";
-			}
+			//echo"</td>";
+			echo "<br>Email: $email[$take]";
 
 
-			echo "</td><td class='cell $color'>";
-			echo "<form action='customer_detail.php' method='post'>";
-			echo "<button type='submit' class='btn btn-primary' title='Zu den Details' name='customer' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button>";
-			echo "</form><tr><td colspan=42 class='cell $color' >Verteiler: ";
+
+
+			echo "<br><br>Verteiler: ";
 			//Hier laden wir zunächst die Verteiler-Ids in denen der Adressat ist und dann direkt den Namen des Verteilers
 			$counting=0;
 			$query = "SELECT customer, distribution FROM customerdistribution WHERE customer=$take";
@@ -258,8 +242,28 @@ include_once("header.php");
 				}
 			unset($dist_id);	
 			//echo "kommt noch";
-			echo "</td></tr><tr height=10>";		
-			echo "<td colspan=42 align='center'></td></tr>";
+			//echo "</td></tr><tr height=10>";		
+			//echo "<td colspan=42 align='center'></td></tr>";
+
+
+			if ($loggedinadmin > "1") {
+			echo "<div align='right'><form action='customer.php' method='post'>";
+			If ($deleted[$take]!=1)
+				{
+				$show="<input type='submit' class='btn btn-success' title='Bekommt Pressemitteilungen' value='Im Verteiler'>";		
+				}
+			else
+				{
+				$show="<input type='submit' class='btn btn-warning' title='Bekommt keine Pressemitteilungenr' value='Inaktiv'>";
+				}
+		
+			echo "$show";
+			echo "<Input type='hidden' name='change' value='$deleted[$take]'>";
+			echo "<Input type='hidden' name='cust' value='$take'>";
+			echo "</form></div>";
+			}
+
+			echo "</div></div>";
 			}
 		}
 	?>	
