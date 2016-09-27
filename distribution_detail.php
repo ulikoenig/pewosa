@@ -155,72 +155,46 @@ include_once("header.php");
 	echo "<INPUT type='hidden' id='dist' name='dist' value='$take'>";
 	echo "<button type='submit' class='btn btn-primary' title='Speichern' name='safe' value='$take'><span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Speichern</button>";
 	
-	?>
-	</td></tr></table><br><table border=0 class="centred">
 	
-	
-	<?
-/*	echo " <form action='distributions.php' method='post' style='display:inline;'>";
-	echo "<button type='submit' class='btn btn-info' title='Zur Übersicht' name='' value=''><span class='glyphicon glyphicon-share' aria-hidden='true'></span> Zurück zur Übersicht</button></form></td><td  colspan=2 bgcolor='#99ccff' align='right'>";
-	echo "<form action='distribution_detail.php' method='post'>";?>
-	<table border=0 class="centred">
-	<?
-			echo "<tr><td colspan=2 bgcolor='#99ccff' align='left'>";
-			echo " <form action='distributions.php' method='post' style='display:inline;'>";
-			echo "<INPUT type='hidden' id='dist' name='dist' value='$take'>";
-			?><button Hspace="5" type='submit' class='btn btn-danger' title='Verteiler löschen' name='delete' value='' onclick="return confirm('Verteiler wirklich löschen?');"><span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Löschen</button></form><?			
-			
-			echo "<td colspan=42 bgcolor='#99ccff' align='right'>";
-			echo "<INPUT type='hidden' id='dist' name='dist' value='$take'>";
-			echo "<button type='submit' class='btn btn-primary' title='Speichern' name='safe' value='$take'><span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Speichern</button></form></td></tr>";
-			
-			?>*/
-		?>
-		<tr height=20>
-			<th class='cell' colspan=42 bgcolor='#cccccc'>Verteilername</th>
-			</tr><tr>
-			<?		
-			echo "<td class='cell' colspan=42 bgcolor='#99ccff'>";
-			echo "<input type='text' name='c_name' value='$name' placeholder='Verteilername' class='form-control' size='50'>";
-			echo "</td>";				
-			?>	
-			</tr><tr height=10></tr><tr>
-			<th class='cell' colspan=42 bgcolor='#cccccc'>Adressaten</th>		
-			</tr>
-			<?
+	echo "</td></tr></table><br>";
+	echo "<div class='panel panel-default'>";
+	echo "<div class='panel-heading'>";
+	echo "Verteilername</div>";
+	echo "<div class='panel-body'>";
+	echo "<input type='text' name='c_name' value='$name' placeholder='Verteilername' class='form-control' size='50'></div></div>";
+		
 
 			For ($i=1;$i<=$counter2;$i++)
 				{
-				If ($color=='#99ccff'){$color='#f5f5dc';}else{$color='#99ccff';}
-				echo "<tr><td class='cell' bgcolor='$color'>";
-				$taking=$ids[$i];	
+				$taking=$ids[$i];
+				echo "<div class='panel panel-default'>";
+				$send_id='customer_detail.php?cust='.$taking;
+				echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$email[$taking]</font></a></div>";
+				echo "<div class='panel-body'>";
+
+					
 				//wir müssen die Namen der Checkboxes definieren
 				$boxname='box'.$taking;	
+				$allname=$firstname[$taking].' '.$lastname[$taking];
+				If ($firstname[$taking]=='' AND $lastname[$taking]==''){$allname='Kein Name gespeichert';}
+				If ($company[$taking]==''){$comp='Kein Unternehmen gespeichert';}else{$comp=$company[$taking];}
 				If ($counting>0)
 					{
 					If (in_array($taking, $customer_id))
 						{
-						{echo "<input type='checkbox' checked name='$boxname'></td><td bgcolor='$color'><b><Span class='badge'>$firstname[$taking] $lastname[$taking]</span></b></td><td bgcolor='$color'><b>$company[$taking]</b></td><td bgcolor='$color'><b>$email[$taking]</b>";}
+						{echo "<input type='checkbox' checked name='$boxname'><br> <b>$allname </b> <br><b> $comp</b><br><b> $email[$taking]</b>";}
 						}
 					else
 						{
-						{echo "<input type='checkbox' name='$boxname'></td><td bgcolor='$color'>$firstname[$taking] $lastname[$taking]</td><td bgcolor='$color'>$company[$taking]</td><td bgcolor='$color'> $email[$taking]";}	
+						{echo "<input type='checkbox' name='$boxname'><br> $allname <br> $comp <br> $email[$taking]";}	
 						}
 					}
 				else
-					{echo "<input type='checkbox' name='$boxname'></td><td bgcolor='$color'>$firstname[$taking] $lastname[$taking]</td><td bgcolor='$color'>$company[$taking]</td><td bgcolor='$color'>$email[$taking]";}
-				echo "</td></tr><tr height=10></tr>";
+					{echo "<input type='checkbox' name='$boxname'><br> $allname <br> $comp <br> $email[$taking]";}
+				echo "</div></div>";
 				}
 			
-			/*echo "<tr><td colspan=2 bgcolor='#99ccff' align='left'>";
-			echo " <form action='distributions.php' method='post' style='display:inline;'>";
-			echo "<INPUT type='hidden' id='dist' name='dist' value='$take'>";
-			?><button type='submit' class='btn btn-danger' title='Verteiler löschen' name='delete' value='' onclick="return confirm('Verteiler wirklich löschen?');"><span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Löschen</button></form><?			
-			
-			echo "<td colspan=42 bgcolor='#99ccff' align='right'>";
-			echo "<INPUT type='hidden' id='dist' name='dist' value='$take'>";
-			echo "<button type='submit' class='btn btn-primary' title='Speichern' name='safe' value='$take'><span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Speichern</button></form>";
-			*/
+
 			?>
 		</table>
 
