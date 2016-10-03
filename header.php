@@ -13,6 +13,8 @@ function die_nicely($msg) {
 	die();
 }
 
+
+
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -58,7 +60,6 @@ echo "<title>PeWoSa - $pagetitle</title>";
 <!-- Latest compiled and minified JavaScript -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <style>
 .mainCol {
 	width: 100%
