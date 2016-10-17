@@ -367,7 +367,7 @@ function isPressreleaseExsiting($pressreleaseID){
 
 $pressreleaseID = fetchintvar ('pressreleaseID',-1);
 $action = fetchstringvar ('action',"");
-$sendnow = fetchboolvar ('sendnow');
+$sendnow = fetchintvar ('sendnow',"");
 $time = fetchstringvar ('time',"");
 $date = fetchstringvar ('date',"");
 $Betreff =  fetchstringvar ('Betreff',"");
@@ -504,7 +504,7 @@ $sqlContact = mysql_real_escape_string ($contact);
 
 	//Wir machen aus dem leserlichen Datum ein englisches
 	//aber nur wenn nicht sendnow ausgewählt ist, dann nehmen wir einfach die aktuelle Zeit
-	If ($sendnow!=1)
+	If ($sendnow==0)
 		{
 		//echo "ich bekomme $senddate und...";
 		$teile = explode(".", $senddate);
@@ -513,11 +513,13 @@ $sqlContact = mysql_real_escape_string ($contact);
 		$tag=$teile[0];
 		$senddate_db=$jahr."-".$monat."-".$tag." ".$sendtime;
 		//echo "$senddate_db draus gemacht.";
-		$sendnow=0;
+		//$sendnow=0;
 		}
 	else
 		{
 		$senddate_db=date("Y-m-d H:i:s");
+		$senddate_db = date("Y-m-d H:i:s",strtotime($senddate_db." -3 minutes"));
+
 		//$sendnow=1;
 		}
 
@@ -715,7 +717,7 @@ if(($pmstate == -2) | ($pmstate > 0 )) {
 	$labelsending=" class=\"active\"";
 }
 
-echo "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">Status:<nav aria-label=\"Page navigation\"><ul class=\"pagination pagination-lg\"><li $labelentwurf><a>Entwurf</a></li><li $labelPressefrei><a>Pressefreigabe</a></li><li $labelfirstauth><a>1. Freigabe</a></li><li $labelsecondauth><a>2. Freigabe</a></li><li $labelsending><a>Versand</a></li></ul></nav></div>";
+echo "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\"><nav aria-label=\"Page navigation\"><ul class=\"pagination pagination-lg\"><li $labelentwurf><a>Entwurf</a></li><li $labelPressefrei><a>Pressefreigabe</a></li><li $labelfirstauth><a>1. Freigabe</a></li><li $labelsecondauth><a>2. Freigabe</a></li><li $labelsending><a>Versand</a></li></ul></nav></div>";
 
 // ******************** Ende Breadcrumbs
 
@@ -1084,53 +1086,79 @@ If ($disabled!='disabled')
 	<div class="panel panel-default">
 	<div class="panel-heading"><h3 class="panel-title">Sendezeit:</h3></div>
 	  <div class="panel-body">
-	Sofort Versenden:<br/>
+ <script>
+	function showsendlater () {
+		var div = document.getElementById("sendlater");
+		document.getElementById("sendlater").style.display="block";
+	}
+	
+	function hidesendlater () {
+		var div = document.getElementById("sendlater");
+     	document.getElementById("sendlater").style.display="none";
+		
+		
+	}
+	
+	</script>
 
 	<?php
-
-if ($pressreleaseID == -1) {
-	//Neu
-	$senddisplay='display:none';
+	
+	$sendnowchecked1 = " checked ";
+	$sendnowchecked2 = " ";
+	$sendnowchecked3 = " ";
 	$rightnow=date("d.m.Y");$rightnow2=date("H:i");
-	echo "	<input checked type=\"checkbox\" name=\"sendnow\" id=\"sendnow\" value=\"sendnow\">";
-	} else{
-		$counter=0;
-		$query = "SELECT sendnow,senddate FROM pressrelease WHERE id = $pressreleaseID";
-		$checkdata = mysql_query($query);
-		$distributorHTML ="";
-		$distributormaxid = 0;
-		if(mysql_num_rows($checkdata)>=1)
+	$senddisplay='display:none'; 
+	
+	$counter=0;
+	$query = "SELECT sendnow,senddate FROM pressrelease WHERE id = $pressreleaseID";
+	$checkdata = mysql_query($query);
+	$distributorHTML ="";
+	$distributormaxid = 0;
+	if(mysql_num_rows($checkdata)>=1)
+		{
+		while($row = mysql_fetch_object($checkdata))
 			{
-			while($row = mysql_fetch_object($checkdata))
+			$counter++;
+			if($row->sendnow==1)
 				{
-				$counter++;
-				if($row->sendnow==1)
-					{
-					$sendnowchecked = " checked ";
-					$rightnow=date("d.m.Y");$rightnow2=date("H:i");
-					$senddisplay='display:none'; 
-					}
-				else 
-					{	
-					$sendnowchecked = "";
-					$senddate = $row->senddate;
-					$teile = explode("-", $senddate);
-					$jahr=$teile[0];
-					$monat=$teile[1];
-					$tag=$teile[2];
-					//echo "alles $senddate / tag $tag / monat $monat / jahr $jahr / rest $rest";
-					//echo "teile 0 $teile[0] 1 $teile[1] 2 $teile[2]";
-					$rest = substr($tag,0, -9);
-					$rightnow=$rest.".".$monat.".".$jahr;
+				$sendnowchecked1 = " checked ";
+				$sendnowchecked2 = " ";
+				$sendnowchecked3 = " ";
+				$rightnow=date("d.m.Y");$rightnow2=date("H:i");
+				$senddisplay='display:none'; 
+				}
+			if($row->sendnow==2)
+				{
+				$sendnowchecked1 = " ";
+				$sendnowchecked2 = " checked ";
+				$sendnowchecked3 = " ";
+				$rightnow=date("d.m.Y");$rightnow2=date("H:i");
+				$senddisplay='display:none'; 
+				}					
+			if($row->sendnow==0) 
+				{	
+				$sendnowchecked1 = " ";
+				$sendnowchecked2 = " ";
+				$sendnowchecked3 = " checked ";
+				$senddate = $row->senddate;
+				$teile = explode("-", $senddate);
+				$jahr=$teile[0];
+				$monat=$teile[1];
+				$tag=$teile[2];
+				//echo "alles $senddate / tag $tag / monat $monat / jahr $jahr / rest $rest";
+				//echo "teile 0 $teile[0] 1 $teile[1] 2 $teile[2]";
+				$rest = substr($tag,0, -9);
+				$rightnow=$rest.".".$monat.".".$jahr;
 
-					$rightnow2=substr($tag, -8,-3);
-					$senddisplay='';
-					}
+				$rightnow2=substr($tag, -8,-3);
+				$senddisplay='';
 				}
 			}
-		echo "	<input ".$sendnowchecked." type=\"checkbox\" name=\"sendnow\" id=\"sendnow\" value=\"sendnow\">";
-	}
-
+		}
+	echo "Sofort <input ".$sendnowchecked1." type='Radio' name='sendnow' id='sendnow1' value='1' onclick='hidesendlater()' onkeypress='hidesendlater()'> ";
+	echo "Manuell <input ".$sendnowchecked2." type='Radio' name='sendnow' id='sendnow2' value='2' onclick='hidesendlater()' onkeypress='hidesendlater()'> ";
+	echo "Später <input ".$sendnowchecked3." type='Radio' name='sendnow' id='sendnow3' value='0' onclick='showsendlater()' onkeypress='showsendlater()'><br><br> ";
+	
 	echo "<span id='sendlater' style='$senddisplay'>";
 ?>
 	<p class="rightCol"><span class="title">Sendedatum:</span><br/>
@@ -1141,12 +1169,6 @@ if ($pressreleaseID == -1) {
 
 	</p>
 	 </div></div>   
-	 <script>
-	var elem = document.getElementById('sendlater');
-	document.getElementById('sendnow').onchange = function() {
-		elem.style.display = this.checked ? 'none' : 'block';
-	};
-	</script>
 
 
 	<!--</div>--> <!--sidebar -->  
