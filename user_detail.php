@@ -26,14 +26,15 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 				$change = "UPDATE users Set password='".$password."' WHERE id='$take'";	
 				$update = mysql_query($change)or die("Speichern leider fehlgeschlagen.".mysql_error());					
 				}
-			$updated_at = date('Y-m-d G:i:s');	
+			$updated_at = date('Y-m-d G:i:s');
+			$hand=md5($_POST['c_email'].$take);			
 			$change = "UPDATE users Set 
 			firstname='".$_POST['c_firstname']."',lastname='".$_POST['c_lastname']."',
 			jobtitle='".$_POST['c_jobtitle']."',phone='".$_POST['c_phone']."',
 			cellphone='".$_POST['c_cellphone']."',email='".$_POST['c_email']."',
 			username='".$_POST['c_username']."',distributor='".$_POST['c_distributor']."',			
 			pressagent='".$_POST['c_pressagent']."',admin='".$_POST['c_admin']."',		
-			updated_at='".$updated_at."'			
+			updated_at='".$updated_at."', hash='".$hand."'			
 			WHERE id='$take'";
 			$update = mysql_query($change)or die("Speichern leider fehlgeschlagen.".mysql_error());			
 			//echo "Gespeichert";
@@ -58,6 +59,8 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 			while($row = mysql_fetch_object($checkdata))
 				{
 				$take=$row->id;
+				$hand=md5($_POST['c_email'].$take);
+				$change = "UPDATE users Set hash='".$hand."' WHERE id='$take'";				
 				}
 			}		
 
