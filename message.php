@@ -401,6 +401,13 @@ function checkLegitimation($action,$pressreleaseID,$loggedinuserid){
 
 	        break;
 
+	    case "Archivieren":
+	        echo "\n<!-- ACTION: Archivieren -->\n";
+		if (canStore($pressreleaseID,$loggedinuserid)) 
+			{ return true;}
+		else {die_nicely("Archivieren nicht möglich bei PM mit sendstate ".getPmState($pressreleaseID));}
+
+	        break;			
 
 	    case "Senden":
 	        echo "\n<!-- ACTION: Senden -->\n";
@@ -633,6 +640,30 @@ If ($action=='delete')
 	$pressreleaseID=-1;	
 	}
 
+//Hier wird archiviert	
+If ($action=='Archivieren')
+	{
+	If (canDelete($pressreleaseID,$loggedinuserid))
+		{
+		$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='-5' WHERE id='$sqlpressreleaseID';";
+		$send = mysql_query($query) or die("Fehler S:".mysql_error());
+		$sendstate=-5;
+		}
+
+	}
+//Hier wird reaktiviert
+If ($action=='Reaktivieren')
+	{
+	If (canDelete($pressreleaseID,$loggedinuserid))
+		{
+		$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='0' WHERE id='$sqlpressreleaseID';";
+		$send = mysql_query($query) or die("Fehler S:".mysql_error());
+		$sendstate=0;		
+		}
+
+	}	
+
+	
 //Hier wird die Pressefreigabe abgearbeitet	
 If (($action=='Freigeben') && userIsPressagend($loggedinuserid) ){
 	if (!isReceiverSelected($pressreleaseID)) {
@@ -1189,7 +1220,7 @@ If ($disabled!='disabled')
 		echo "<p name='Betreff' style='font-size: 16pt'>$sqlBetreff</p>";}
 	   else	{
 		$readonly='';
-		echo "<input name='Betreff' type='text' class='mainCol' value='$sqlBetreff' $readonly style='font-size: 16pt'>";}
+		echo "<input name='Betreff' type='text' class='mainCol' value='$sqlBetreff' $readonly style='font-size: 16pt' required placeholder='PM: Jemand sagt Dinge'>";}
 	  ?>
 
 	 </div>
@@ -1298,8 +1329,9 @@ If ($disabled!='disabled')
 	<div class="panel panel-default">
 	<div class="panel-body">
 
-	<button type="button" name="action" value="" class="btn btn-info" onclick="window.location.href='./';"><span class="glyphicon glyphicon-share" aria-hidden="true"'></span> Zur Übersicht ohne Speichern</button>
+	
 	<?
+	//<button type="button" name="action" value="" class="btn btn-info" onclick="window.location.href='./';"><span class="glyphicon glyphicon-share" aria-hidden="true"'></span> Nicht Speichern</button>
 	//Hier muss ich checken ob alle wichtigen Daten ausgefüllt sind
 	//Das geht aber nur im Javascript???
 	//$complete=TRUE;
@@ -1315,7 +1347,7 @@ If ($disabled!='disabled')
 	//Darf Pressefreigabe machen
 	If (canRelease($pressreleaseID,$loggedinuserid))
 		{?>
-		<button type="submit" name="action" value="Freigeben" class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"'></span> Pressefreigabe </button>&nbsp;
+		<button type="submit" name="action" value="Freigeben" class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"'></span> Pressefreigabe</button>&nbsp;
 		<?}
 
 	//Darf ändern und mit Bearbeiten die Freigaben aufheben
@@ -1327,6 +1359,14 @@ If ($disabled!='disabled')
 	//Darf löschen
 	if(canDelete($pressreleaseID,$loggedinuserid))
 		{
+		If ($sendstate!=-5)
+			{
+			?><button type="submit" name="action" value="Archivieren" class="btn btn-warning" onclick="return confirm('PM wirklich ungesendet ins Archiv verschieben?');"><span class="glyphicon glyphicon-inbox" aria-hidden="true"'></span> Ungesendet archivieren</button>&nbsp;<?
+			}
+		If ($sendstate==-5)
+			{
+			?><button type="submit" name="action" value="Reaktivieren" class="btn btn-warning"><span class="glyphicon glyphicon-share" aria-hidden="true"'></span> Reaktivieren</button>&nbsp;<?
+			}			
 		?><button type="submit" name="action" value="delete" class="btn btn-danger" onclick="return confirm('PM wirklich löschen?');"><span class="glyphicon glyphicon-trash" aria-hidden="true"'></span> Löschen</button>&nbsp;<?
 		}
 
