@@ -79,20 +79,18 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			$receiverName = $c_firstname." ".$c_lastname;
 			$send = "INSERT INTO customerNewsletter (firstname, lastname, email, activationcode) VALUES('".$c_firstname."', '".$c_lastname."', '".$c_email."', '".$activationcode."')";
 			$sent = mysql_query($send) or die("Speichern leider fehlgeschlagen".mysql_error());
+			$take = mysql_insert_id();
+			$hand=md5($c_email.$take);
+			$change = "UPDATE customerNewsletter Set hash='".$hand."' WHERE id='$take'";	
+			$sent = mysql_query($change) or die("Hash-Speichern leider fehlgeschlagen".mysql_error());
 			echo "Fast geschafft! Wir haben Dir eine Aktivierungsmail geschickt. Bitte klicke auf den Link in der Mail, um Dein Newsletterkonto zu aktivieren.";
 			//Hier Mail verschicken
 			$subject='Aktivierung Deines Newsletter-Kontos';
 			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unseren Newsletter zu abonnieren:\n ulikoenig.de/pewosa/regnews.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jedem Newsletter selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
+			
+			
 			sendactivation($subject,$body,$c_email,$receiverName);
-			//Neu angelegte Hash mit auf den Weg geben
-			$query = "SELECT id FROM customerNewsletter ORDER BY id DESC LIMIT 1";
-			$checkdata = mysql_query($query);
-			while($row = mysql_fetch_object($checkdata))
-				{
-				$take=$row->id;
-				$hand=md5($_POST['c_email'].$take);
-				$change = "UPDATE customerNewsletter Set hash='".$hand."' WHERE id='$take'";					
-				}			
+
 			}
 		else
 			{
