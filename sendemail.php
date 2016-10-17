@@ -57,9 +57,9 @@ function sendpm($subject, $body, $receiverMail, $receiverName, $attachment, $id)
 	
 	$textFooter = "\n-- \npresse@piratenfraktion-sh.de\nPiratenfraktion im Schleswig-Holsteinischen Landtag\n0431 988 1337\nDüsternbrooker Weg 70\n24105 Kiel\nhttps://piratenfraktion-sh.de";
 	
-	$htmlBody = "<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"robots\" content=\"noindex,nofollow\"><title>PM: " . $subject . "</title><style type=\"text/css\">body{max-width:40em;font-family: \"Open Sans\",\"Sans Serif\";background-color: orange;} h1 {font-family:\"Bebas Neue\",\"Sans Serif\";} .container {background-color: white;padding:1em;}</style></head><body><div class=\"container\">$logo<p>Pressemitteilung:</p><h3>" . $subject . "</h3><p>" . strftime ( "%A, %e. %B %G" ) . "</p><p>" . nl2br ( htmlEscapeAndLinkUrls ( $body ) ) . "</p></div>$imout<br><br>$htmlFooter</body></html>";
+	$htmlBody = "<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"robots\" content=\"noindex,nofollow\"><title>PM: " . $subject . "</title><style type=\"text/css\">body{max-width:40em;font-family: \"Open Sans\",\"Sans Serif\";background-color: orange;} h1 {font-family:\"Bebas Neue\",\"Sans Serif\"; -moz-hyphens: auto; -o-hyphens: auto; -webkit-hyphens: auto; -ms-hyphens: auto; hyphens: auto; } .container {background-color: white;padding:1em;}</style></head><body><div class=\"container\">$logo<p>Pressemitteilung:</p><h3>" . $subject . "</h3><p>" . strftime ( "%A, %e. %B %G" ) . "</p><p>" . nl2br ( htmlEscapeAndLinkUrls ( $body ) ) . "</p></div>$imout<br><br>$htmlFooter</body></html>";
 	
-	$textBody = "P r e s s e m i t t e i l u n g :\n*" . $subject . "*\n\n" . strftime ( "%A, %e %B %G" ) . "\n\n" . $body . $imout . $textFooter;
+	$textBody = "P r e s s e m i t t e i l u n g :\n*" . $subject . "*\n\n" . strftime ( "%A, %e. %B %G" ) . "\n\n" . $body . $imout . $textFooter;
 	
 	$mail->Subject = "PM: " . $subject;
 	
@@ -241,18 +241,19 @@ while ( $stillsending ) {
 					}
 				}
 			}
-			
-			// Mitteilung an die Presse
-			$email = 'presse@piratenfraktion-sh.de';
-			$name = 'Christian Lewin';
-			sendpm ( $subject, $body, $email, $name, $pdf, '0' );
-			If ($verbose) {
-				echo "PM an Presse als Kopie verschickt...\n";
-			}
-			
-			// PM als gesendet markieren
-			setpmsending ( $pmid, - 2 );
+		}				
+		// Mitteilung an die Presse
+		$email = 'presse@piratenfraktion-sh.de';
+		$name = 'Christian Lewin';
+		sendpm ( $subject." - KontrollPM", $body, $email, $name, $pdf, '0' );
+		If ($verbose) {
+			echo "PM an Presse als Kopie verschickt...\n";
 		}
+		
+
+		// PM als gesendet markieren
+		setpmsending ( $pmid, - 2 );
+
 		flock ( $fp, LOCK_UN );
 		fclose ( $fp );
 		unset ( $all_mails );
