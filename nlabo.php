@@ -54,7 +54,8 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 
 		$take=$_POST['cust'];
 		$take2=$_POST['change'];
-		If ($take2==1){$changer='0';}else{$changer='1';}	
+		If ($take2==1){$changer='-1';}
+		If ($take2==-1 OR $take2==0){$changer='1';}
 		$change = "UPDATE customerNewsletter Set active='$changer' WHERE id='$take'";
 		$update = mysql_query($change)or die("Deaktivieren leider fehlgeschlagen.".mysql_error());
 		}
@@ -181,7 +182,8 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 			}
 		else
 			{
-			$show="<input type='submit' class='btn btn-warning' title='Bekommt keinen Newsletter' value='Inaktiv'>";
+			If ($active[$take]==0){$show="<input type='submit' class='btn btn-warning' title='Möchte keinen Newsletter' value='Möchte keinen Newsletter'>";}
+			If ($active[$take]==-1){$show="<input type='submit' class='btn btn-warning' title='Bekommt keinen Newsletter' value='Deaktiviert'>";}
 			}
 		
 
