@@ -119,6 +119,15 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			$subject='Aktivierung Deines Presse-Kontos';
 			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unsere Pressemitteilungen zu abonnieren:\n ulikoenig.de/pewosa/regcust.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jeder Pressemitteilung selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
 			sendactivation($subject,$body,$c_email,$receiverName);
+			//Neu angelegte Hash mit auf den Weg geben
+			$query = "SELECT id FROM customer ORDER BY id DESC LIMIT 1";
+			$checkdata = mysql_query($query);
+			while($row = mysql_fetch_object($checkdata))
+				{
+				$take=$row->id;
+				$hand=md5($_POST['c_email'].$take);
+				$change = "UPDATE customer Set hash='".$hand."' WHERE id='$take'";					
+				}			
 			}
 		else
 			{
