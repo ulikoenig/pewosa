@@ -280,7 +280,7 @@ if(isset($errorMessage)) {
 			<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eintragen</button></td></tr></form>
 
 			<tr><td class='cell' colspan=42 >	
-			<a href='login.php'><Font Size=3>Zurück zur Hauptseite</Font></a>
+			<a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><Font Size=3>Zurück zur Hauptseite</Font></a>
 			<br><br>
 			<a href='regcust.php'><font size=3>Du möchtest unsere Pressemitteilungen bekommen?</font></a>
 			</td></tr>
@@ -304,7 +304,7 @@ if(isset($errorMessage)) {
 		<?
 		echo "$textout";
 		?>
-		</h1><a href='login.php'><font size=3>Zur Hauptseite</font></a></td></tr></table>
+		</h1><a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><font size=3>Zur Hauptseite</font></a></td></tr></table>
 		<?
 		}
 		?>
