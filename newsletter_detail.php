@@ -47,11 +47,11 @@ function sendnewsletter($subject,$body,$receiverMail,$receiverName){
 	//$textFooter = "\n \npresse@piratenfraktion-sh.de\nPiratenfraktion im Schleswig-Holsteinischen Landtag\n0431 988 1337\nDüsternbrooker Weg 70\n24105 Kiel\nhttps://piratenfraktion-sh.de";
 
 	
-	$htmlBody = "<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"robots\" content=\"noindex,nofollow\"><title>".$subject."</title><style type=\"text/css\">body{max-width:40em;font-family: \"Open Sans\",\"Sans Serif\";background-color: orange;} h1 {font-family:\"Bebas Neue\",\"Sans Serif\";} .container {background-color: white;padding:1em;}</style></head><body><div class=\"container\"><p></p><h3>".$subject."</h3><p>".strftime("%A, %e %B %G")."</p><p>".$body."</p></div>$imout<br><br>$htmlFooter</body></html>";
+	$htmlBody = "<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"robots\" content=\"noindex,nofollow\"><title>".$subject."</title><style type=\"text/css\">body{max-width:40em;font-family: \"Open Sans\",\"Sans Serif\";background-color: orange;} h1 {font-family:\"Bebas Neue\",\"Sans Serif\";} .container {background-color: white;padding:1em;}</style></head><body><div class=\"container\"><p></p><h3>".$subject."</h3><p>".strftime("%A, %e. %B %G")."</p><p>".$body."</p></div>$imout<br><br>$htmlFooter</body></html>";
 
 
 
-	$textBody = $imout." ".$subject."*\n\n".strftime("%A, %e %B %G")."\n\n"." ".$body;
+	$textBody = $imout." ".$subject."*\n\n".strftime("%A, %e. %B %G")."\n\n"." ".$body;
 
 	$mail->Subject = $subject;
 
