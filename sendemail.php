@@ -146,7 +146,7 @@ while ( $stillsending ) {
 	$counter = 0;
 	$pmid = 0;
 	$sendstate = 0;
-	$query = "SELECT `pressrelease`.*, `users`.firstname, `users`.lastname, `users`.jobtitle, `users`.phone FROM `pressrelease`, `users` WHERE `pressrelease`.pressagentid = `users`.id AND senddate IS NOT NULL AND senddate >0 AND ((sendstate = -1) OR (sendstate > 0)) AND senddate < CONVERT_TZ( NOW( ) , '" . SQLSERVERTIMEZONE . "', '" . SQLLOCALTIMEZONE . "' )  Order by id ASC LIMIT 1";
+	$query = "SELECT `pressrelease`.*, `users`.firstname, `users`.lastname, `users`.jobtitle, `users`.phone FROM `pressrelease`, `users` WHERE `pressrelease`.pressagentid = `users`.id AND senddate IS NOT NULL AND sendnow <> 2 AND senddate >0 AND ((sendstate = -1) OR (sendstate > 0)) AND senddate < CONVERT_TZ( NOW( ) , '" . SQLSERVERTIMEZONE . "', '" . SQLLOCALTIMEZONE . "' )  Order by id ASC LIMIT 1";
 	$checkdata = mysql_query ( $query ) or die ( "SQL Fehler Dist:" . mysql_error ()."\n\n".$query );
 	if (mysql_num_rows ( $checkdata ) >= 1) {
 		while ( $row = mysql_fetch_object ( $checkdata ) ) {
