@@ -48,7 +48,7 @@ include_once("header.php");
 		$take=$_POST['customer'];
 		$updatedate = date('Y-m-d G:i:s');
 		$deleteuserid=$_SESSION['userid'];			
-		$change = "UPDATE customer Set deleted='1', deleteuserid='".$deleteuserid."',updatedate='".$updatedate."' WHERE id='$take'";
+		$change = "UPDATE customer Set deleted='2', deleteuserid='".$deleteuserid."',updatedate='".$updatedate."' WHERE id='$take'";
 		$update = mysql_query($change)or die("Löschen leider fehlgeschlagen.".mysql_error());			
 		}
 
@@ -57,7 +57,8 @@ include_once("header.php");
 
 		$take=$_POST['cust'];
 		$take2=$_POST['change'];
-		If ($take2==1){$changer='0';}else{$changer='1';}	
+		If ($take2==0){$changer='2';}
+		If ($take2==1 OR $take2==2){$changer='0';}	
 		$change = "UPDATE customer Set deleted='$changer' WHERE id='$take'";
 		$update = mysql_query($change)or die("Aktivierung/Deaktivieren leider fehlgeschlagen.".mysql_error());
 		}
@@ -180,7 +181,7 @@ include_once("header.php");
 		$take=$ids[$i];
 		$send_id='customer_detail.php?cust='.$take;
 		echo "<div class='panel panel-default'>";
-		If (($loggedinadmin < "1" AND $deleted[$take]!=1) OR ($loggedinadmin > "1"))
+		If (($loggedinadmin < "1" AND $deleted[$take]!=1 AND $deleted[$take]!=2) OR ($loggedinadmin > "1"))
 			{		
 			//If ($color=='cell-even'){$color='cell-uneven';}else{$color='cell-even';}
 			//echo "<tr><td class='cell $color'><span class='badge'><Font size='3'>";
@@ -248,13 +249,14 @@ include_once("header.php");
 
 			if ($loggedinadmin > "1") {
 			echo "<div align='right'><form action='customer.php' method='post'>";
-			If ($deleted[$take]!=1)
+			If ($deleted[$take]!=1 AND $deleted[$take]!=2)
 				{
 				$show="<input type='submit' class='btn btn-success' title='Bekommt Pressemitteilungen' value='Im Verteiler'>";		
 				}
 			else
 				{
-				$show="<input type='submit' class='btn btn-warning' title='Bekommt keine Pressemitteilungenr' value='Inaktiv'>";
+				If ($deleted[$take]==1){$show="<input type='submit' class='btn btn-warning' title='Benutzer hat sich selbstständnig abgemeldet' value='Wünscht keine Mails'>";}
+				If ($deleted[$take]==2){$show="<input type='submit' class='btn btn-warning' title='Benutzer wurde durch Nutzer abgemeldet' value='Deaktiviert'>";}
 				}
 		
 			echo "$show";
