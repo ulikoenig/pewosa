@@ -153,20 +153,13 @@ function bcrypt_check ( $email, $password, $stored )
 		$found_id=0;
 
 
-		$query = "SELECT id,email FROM customer";
+		$query = "SELECT id,email FROM customer WHERE hash='$took' LIMIT 1";
 		$checkdata = mysql_query($query);
 		if(mysql_num_rows($checkdata)>=1)
 			{
 			while($row = mysql_fetch_object($checkdata))
 				{
-				$hand=md5($row->email.$row->id);
-				//echo "took: $took hand: $hand<br>";
-				
-				If ($hand == $took)				
-					{
-					//echo "YAAAA<br>";
-					$found_id=$row->id;
-					}
+				$found_id=$row->id;
 				}
 			}
 
