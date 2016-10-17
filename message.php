@@ -1359,11 +1359,11 @@ If ($disabled!='disabled')
 	//Darf löschen
 	if(canDelete($pressreleaseID,$loggedinuserid))
 		{
-		If ($sendstate!=-5)
+		If ($sendstate!=-5 AND $pressreleaseID!=-1)
 			{
 			?><button type="submit" name="action" value="Archivieren" class="btn btn-warning" onclick="return confirm('PM wirklich ungesendet ins Archiv verschieben?');"><span class="glyphicon glyphicon-inbox" aria-hidden="true"'></span> Ungesendet archivieren</button>&nbsp;<?
 			}
-		If ($sendstate==-5)
+		If ($sendstate==-5 AND $pressreleaseID!=-1)
 			{
 			?><button type="submit" name="action" value="Reaktivieren" class="btn btn-warning"><span class="glyphicon glyphicon-share" aria-hidden="true"'></span> Reaktivieren</button>&nbsp;<?
 			}			
