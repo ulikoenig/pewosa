@@ -2,10 +2,13 @@
 $pagetitle='Adressat Bearbeiten';
 include_once("header.php");
 
+
 	
-	If (isset($_POST['customer']))
+	If (isset($_POST['customer']) OR isset($_GET['cust']))
 		{
 		$take=$_POST['customer'];
+
+		If (isset($_GET['cust'])){$take=$_GET['cust'];}
 
 		If (isset($_POST['safe']) AND $take!='xxx')
 			{
@@ -18,7 +21,8 @@ include_once("header.php");
 
 			$updatedate = date('Y-m-d G:i:s');
 
-			$updateuserid=$_SESSION['userid'];			
+			$updateuserid=$_SESSION['userid'];
+			$hand=md5($_POST['c_email'].$take);				
 			//Eintrag anpassen, falls bereits vorhanden
 			$change = "UPDATE customer Set 
 			firstname='".$_POST['c_firstname']."',lastname='".$_POST['c_lastname']."',
@@ -27,7 +31,7 @@ include_once("header.php");
 			street='".$_POST['c_street']."',streetnumber='".$_POST['c_streetnumber']."',			
 			zipcode='".$_POST['c_zipcode']."',city='".$_POST['c_city']."',			
 			birthdate='".$b_show."',notes='".$_POST['c_notes']."',
-			updatedate='".$updatedate."', updateuserid='".$updateuserid."'			
+			updatedate='".$updatedate."', updateuserid='".$updateuserid."', hash='".$hand."'			
 			WHERE id='$take'";
 
 			$update = mysql_query($change)or die("Speichern leider fehlgeschlagen.".mysql_error());			
@@ -51,6 +55,8 @@ include_once("header.php");
 			while($row = mysql_fetch_object($checkdata))
 				{
 				$take=$row->id;
+				$hand=md5($_POST['c_email'].$take);
+				$change = "UPDATE customer Set hash='".$hand."' WHERE id='$take'";					
 				}
 			}		
 
@@ -80,7 +86,7 @@ include_once("header.php");
 				}
 			}	
 		}
-	If (!isset($_POST['customer']) OR $take=='xxx')
+	If ((!isset($_POST['customer']) AND !isset($_GET['cust'])) OR $take=='xxx' )
 		{
 		//Kein Datensatz festgelegt oder neu? - Erstmal Standardangaben zeigen	
 		$firstname='';
