@@ -310,7 +310,7 @@ If (isset($_POST['Freigabe5']))
 <?
 
 	echo "<form action='message.php' method='post' style='display:inline;'>";
-	echo "<button type='submit' class='btn btn-primary' title='Neue PM' name='customer' value='xxx'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span> Neue PM </button></form>";
+	echo "<button type='submit' class='btn btn-primary' title='Neue PM' name='customer' value='xxx'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span> Neue PM </button></form></td></tr><tr><td colspan=42 class='cell' align='center'>";
 
 	//Nu brauchen wir Buttons um die Sortierung anzuzeigen
 
@@ -330,21 +330,21 @@ If (isset($_POST['Freigabe5']))
 	//If ($menu_point!=2){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
 	echo " Betreff </button></form>";
 
-	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
+	/*echo " <form action='messagelist.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-info' title='Nach Freigabe 1 sortieren' name='sorting' value='3'>";
 	//Wird hiernach sortiert, dann in welche Richtung?
 	If ($menu_point==3 AND $menu_direction==0){echo "<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>";}
 	If ($menu_point==3 AND $menu_direction==1){echo "<span class='glyphicon glyphicon-chevron-up' aria-hidden='true'></span>";}
 	//If ($menu_point!=3){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
-	echo " Freigabe 1 </button></form>";
+	echo " Freigabe 1 </button></form>";*/
 
-	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
+	/*echo " <form action='messagelist.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-info' title='Nach Freigabe 2 sortieren' name='sorting' value='4'>";
 	//Wird hiernach sortiert, dann in welche Richtung?
 	If ($menu_point==4 AND $menu_direction==0){echo "<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>";}
 	If ($menu_point==4 AND $menu_direction==1){echo "<span class='glyphicon glyphicon-chevron-up' aria-hidden='true'></span>";}
 	//If ($menu_point!=4){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
-	echo " Freigabe 2 </button></form>";
+	echo " Freigabe 2 </button></form>";*/
 
 	/*echo " <form action='messagelist.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-info' title='Nach Ansprechpartner bei der Presse sortieren' name='sorting' value='5'>";
@@ -354,21 +354,21 @@ If (isset($_POST['Freigabe5']))
 	//If ($menu_point!=5){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
 	echo " Ansprechpartner, Presse </button></form>";*/
 
-	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
+	/*echo " <form action='messagelist.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-info' title='Nach Pressefreigeber/in sortieren' name='sorting' value='6'>";
 	//Wird hiernach sortiert, dann in welche Richtung?
 	If ($menu_point==6 AND $menu_direction==0){echo "<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>";}
 	If ($menu_point==6 AND $menu_direction==1){echo "<span class='glyphicon glyphicon-chevron-up' aria-hidden='true'></span>";}
 	//If ($menu_point!=6){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
-	echo " Presse </button></form>";
+	echo " Presse </button></form>";*/
 
-	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
+	/*echo " <form action='messagelist.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-info' title='Nach Tags sortieren' name='sorting' value='7'>";
 	//Wird hiernach sortiert, dann in welche Richtung?
 	If ($menu_point==7 AND $menu_direction==0){echo "<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>";}
 	If ($menu_point==7 AND $menu_direction==1){echo "<span class='glyphicon glyphicon-chevron-up' aria-hidden='true'></span>";}
 	//If ($menu_point!=7){echo "<span class='glyphicon glyphicon-retweet' aria-hidden='true'></span>";}
-	echo " Tags </button></form>";
+	echo " Tags </button></form>";*/
 
 	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
 	echo "<button type='submit' class='btn btn-info' title='Nach Absendedatum sortieren' name='sorting' value='8'>";
@@ -387,10 +387,10 @@ If (isset($_POST['Freigabe5']))
 	echo " Status </button></form>";
 
 	echo " <form action='messagelist.php' method='post' style='display:inline;'>";
-	//echo "<button type='submit' class='btn btn-info' title='Versandte PMs ein-/ausblenden' name='blending' value='1'>";
+	//echo "<button type='submit' class='btn btn-info' title='Archiv ein-/ausblenden' name='blending' value='1'>";
 	If ($menu_check==0){echo "<input type='checkbox' onchange='submit();'>";}
 	If ($menu_check==1){echo "<input type='checkbox' onchange='submit();' checked>";}
-	echo "<input type='hidden' name='blending' value='1'> Versandte PMs ein-/ausblenden</form><br><br>";
+	echo "<input type='hidden' name='blending' value='1'> Archiv ein-/ausblenden</form><br><br>";
 ?>
 	</td>	
 		</tr></table>
@@ -416,7 +416,7 @@ If (isset($_POST['Freigabe5']))
 			}	
 		$send_id='message.php?pressreleaseID='.$take;	
 		//echo "<tr><td class='cell' bgcolor='$color'><a href='$send_id'><span class='badge' title='$showsubjectlong'><Font size='3'>$showsubject</font></span>";
-		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'>$showsubject (PM $take)</font></a>";
+		echo "<div class='panel-heading'><a href='$send_id'><Font size='4'><span class='badge' title='Mitteilungs-Nummer $take'>ID $take</span> $showsubject </font></a>";
 
 		echo "<form action='message.php' method='post' style='display:inline;float: right;'>";
 		echo "<button align='right'type='submit' class='btn btn-primary' title='Zu den Details' name='pressreleaseID' value='$take'><span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span> Details</button>";
