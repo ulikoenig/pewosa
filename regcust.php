@@ -113,21 +113,17 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 	
 			$send = "INSERT INTO customer (firstname, lastname, company, phone, cellphone, email, street, streetnumber, zipcode, city, birthdate, notes, createdate, updatedate, updateuserid, activationcode, deleted) VALUES('".$c_firstname."', '".$c_lastname."', '".$c_company."', '".$c_phone."', '".$c_cellphone."', '".$c_email."', '".$c_street."', '".$c_streetnumber."', '".$c_zipcode."', '".$c_city."', '".$b_show."', '".$notes."', '".$createdate."', '".$updatedate."', '0', '".$activationcode."','1')";
 			$sent = mysql_query($send) or die("Kontakt anlegen leider fehlgeschlagen".mysql_error());
-
+			$take = mysql_insert_id();
+			$hand=md5($c_email.$take);
+			$change = "UPDATE customer Set hash='".$hand."' WHERE id='$take'";	
+			$sent = mysql_query($change) or die("Hash-Speichern leider fehlgeschlagen".mysql_error());
+			
 			echo "Fast geschafft! Wir haben Dir eine Aktivierungsmail geschickt. Bitte klicke auf den Link in der Mail, um Dein Pressekonto zu aktivieren.";
 			//Hier Mail verschicken
 			$subject='Aktivierung Deines Presse-Kontos';
 			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unsere Pressemitteilungen zu abonnieren:\n ulikoenig.de/pewosa/regcust.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jeder Pressemitteilung selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
 			sendactivation($subject,$body,$c_email,$receiverName);
-			//Neu angelegte Hash mit auf den Weg geben
-			$query = "SELECT id FROM customer ORDER BY id DESC LIMIT 1";
-			$checkdata = mysql_query($query);
-			while($row = mysql_fetch_object($checkdata))
-				{
-				$take=$row->id;
-				$hand=md5($_POST['c_email'].$take);
-				$change = "UPDATE customer Set hash='".$hand."' WHERE id='$take'";					
-				}			
+		
 			}
 		else
 			{
