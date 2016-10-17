@@ -54,12 +54,11 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 
 } // ENDE sendpm
 
-
 	If (isset($_POST['new']))
 		{
 		//Checken wir mal ob die E-Mail schon bekannt ist
 		$handy=$_POST['c_email'];
-		$query = "SELECT email FROM customerNewsletter WHERE email='$handy'";
+		$query = "SELECT email FROM customer WHERE email='$handy'";
 		$checkdata = mysql_query($query);
 		if(mysql_num_rows($checkdata)==1)
 			{
@@ -70,19 +69,55 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			$double=FALSE;
 			}
 		If (!$double)
-			{			
+			{
+			//Erstmal Geburtstag Datenbanktauglich machen
+			$teile = explode(".", $_POST['c_birthdate']);
+			$jahr=$teile[2];
+			$monat=$teile[1];
+			$tag=$teile[0];
+			$b_show=$jahr."-".$monat."-".$tag;
+			$notes= mysql_real_escape_string ($_POST['c_notes']);
+			//Wir müssen noch die gewünschten Verteiler in die Notizen setzen
+			If (isset($_POST['box1']))
+				{
+				$notes=$notes." Möchte in den großen Verteiler";
+				}
+			If (isset($_POST['box2']))
+				{
+				$notes=$notes." Möchte in den Fachverteiler";
+				}
+			If (isset($_POST['box3']))
+				{
+				$notes=$notes." Möchte in den Regionalverteiler";
+				}
+			If (isset($_POST['box4']))
+				{
+				$notes=$notes." Möchte in den Spezialverteiler";
+				}					
 			$createdate= date('Y-m-d G:i:s');
+			$updatedate= date('Y-m-d G:i:s');
+
+
 			$c_firstname = mysql_real_escape_string ($_POST['c_firstname']);
 			$c_lastname = mysql_real_escape_string ($_POST['c_lastname']);
+			$c_company = mysql_real_escape_string ($_POST['c_company']);
+			$c_phone = mysql_real_escape_string ($_POST['c_phone']);
+			$c_cellphone = mysql_real_escape_string ($_POST['c_cellphone']);
 			$c_email = mysql_real_escape_string ($_POST['c_email']);
+			$c_street = mysql_real_escape_string ($_POST['c_street']);
+			$c_streetnumber = mysql_real_escape_string ($_POST['c_streetnumber']);
+			$c_zipcode = mysql_real_escape_string ($_POST['c_zipcode']);
+			$c_city = mysql_real_escape_string ($_POST['c_city']);
 			$activationcode=mt_rand(1000000,9999999);
 			$receiverName = $c_firstname." ".$c_lastname;
-			$send = "INSERT INTO customerNewsletter (firstname, lastname, email, activationcode) VALUES('".$c_firstname."', '".$c_lastname."', '".$c_email."', '".$activationcode."')";
-			$sent = mysql_query($send) or die("Speichern leider fehlgeschlagen".mysql_error());
-			echo "Fast geschafft! Wir haben Dir eine Aktivierungsmail geschickt. Bitte klicke auf den Link in der Mail, um Dein Newsletterkonto zu aktivieren.";
+	
+			$send = "INSERT INTO customer (firstname, lastname, company, phone, cellphone, email, street, streetnumber, zipcode, city, birthdate, notes, createdate, updatedate, updateuserid, activationcode, deleted) VALUES('".$c_firstname."', '".$c_lastname."', '".$c_company."', '".$c_phone."', '".$c_cellphone."', '".$c_email."', '".$c_street."', '".$c_streetnumber."', '".$c_zipcode."', '".$c_city."', '".$b_show."', '".$notes."', '".$createdate."', '".$updatedate."', '0', '".$activationcode."','1')";
+			$sent = mysql_query($send) or die("Kontakt anlegen leider fehlgeschlagen".mysql_error());
+
+			echo "Fast geschafft! Wir haben Dir eine Aktivierungsmail geschickt. Bitte klicke auf den Link in der Mail, um Dein Pressekonto zu aktivieren.";
 			//Hier Mail verschicken
-			$subject='Aktivierung Deines Newsletter-Kontos';
-			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unseren Newsletter zu abonnieren:\n ulikoenig.de/pewosa/regnews.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jedem Newsletter selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
+			$subject='Aktivierung Deines Presse-Kontos';
+			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unsere Pressemitteilungen zu abonnieren:\n ulikoenig.de/pewosa/regcust.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jeder Pressemitteilung selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
 			sendactivation($subject,$body,$c_email,$receiverName);
 			}
 		else
@@ -90,26 +125,27 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			//echo "E-Mail-Adresse existiert bereits...";
 			$firstname=$_POST['c_firstname'];
 			$lastname=$_POST['c_lastname'];
+			$company=$_POST['c_company'];
+			$phone=$_POST['c_phone'];
+			$cellphone=$_POST['c_cellphone'];
+			$street=$_POST['c_street'];
+			$streetnumber=$_POST['c_streetnumber'];
+			$zipcode=$_POST['c_zipcode'];
+			$city=$_POST['c_city'];			
+			$birthdate=$_POST['c_birthday'];
+			$notes=$_POST['c_notes'];
 			}			
 		}
 
+
+function bcrypt_check ( $email, $password, $stored )
+{
+    $string = hash_hmac ( "CodePass", str_pad ( $password, strlen ( $password ) * 4, sha1 ( $email ), STR_PAD_BOTH ), SALT, true );
+    return crypt ( $string, substr ( $stored, 0, 30 ) ) == $stored;
+}
+
 	If (isset($_GET['out']))
 		{
-		//Gucken wir mal ob es die Mail gibt und setzen sie dann ggf. inaktiv
-		/*$took=$_GET['out'];
-		$query = "SELECT email FROM customerNewsletter WHERE email='$took'";
-		$checkdata = mysql_query($query);
-		if(mysql_num_rows($checkdata)==1)
-			{
-			$change = "UPDATE customerNewsletter Set active='0' WHERE email='$took'";
-			$update = mysql_query($change)or die("Fehler.".mysql_error());
-			$textout="Abgemacht! Wir schicken keine weitere Newsletter an Deine E-Mail-Adresse $took.";			
-			}
-		else
-			{
-			$textout="Hier ist leider ein Fehler passiert. Deine E-Mail-Adresse wurde nicht im System gefunden.";
-			}*/
-
 		//Gucken wir mal ob es die Mail gibt und setzen sie dann ggf. inaktiv
 		$took=$_GET['out'];
 
@@ -117,7 +153,7 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 		$found_id=0;
 
 
-		$query = "SELECT id,email FROM customerNewsletter WHERE hash='$took'";
+		$query = "SELECT id,email FROM customer WHERE hash='$took' LIMIT 1";
 		$checkdata = mysql_query($query);
 		if(mysql_num_rows($checkdata)>=1)
 			{
@@ -129,13 +165,13 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 
 		If ($found_id!=0)
 			{
-			$query = "SELECT id FROM customerNewsletter WHERE id='$found_id'";
+			$query = "SELECT id FROM customer WHERE id='$found_id'";
 			$checkdata = mysql_query($query);
 			if(mysql_num_rows($checkdata)==1)
 				{
-				$change = "UPDATE customerNewsletter Set active='0' WHERE id='$found_id'";
+				$change = "UPDATE customer Set deleted='1' WHERE id='$found_id'";
 				$update = mysql_query($change)or die("Fehler.".mysql_error());
-				$textout="Abgemacht! Wir schicken keine weiteren Newsletter an Deine E-Mail-Adresse.";
+				$textout="Abgemacht! Wir schicken keine weitere Pressemitteilungen an Deine E-Mail-Adresse.";
 				}
 			else
 				{
@@ -146,22 +182,25 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			{
 			$textout="Hier ist leider ein Fehler passiert. Deine E-Mail-Adresse wurde nicht im System gefunden.";
 			}
-
-
+		
 		}
 
 	If (isset($_GET['activationcode']))
 		{
 		//Gucken wir mal ob es den Code gibt und setzen den Nutzer dann ggf. aktiv
 		$took=$_GET['activationcode'];
-		$query = "SELECT activationcode FROM customerNewsletter WHERE activationcode='$took'";
+		$query = "SELECT activationcode FROM customer WHERE activationcode='$took'";
 		$checkdata = mysql_query($query);
 		if(mysql_num_rows($checkdata)==1)
 			{
-			$change = "UPDATE customerNewsletter Set active='1',activationcode='' WHERE activationcode='$took'";
-			$update = mysql_query($change)or die("Fehler.".mysql_error());			
+			$change = "UPDATE customer Set deleted='0',activationcode='0' WHERE activationcode='$took'";
+			$update = mysql_query($change)or die("Fehler.".mysql_error());
+			$textout="Vielen Dank für die Aktivierung! Du bekommst ab sofort unsere Pressemitteilungen.";
 			}
-		$textout="Vielen Dank für die Aktivierung! Du bekommst ab sofort unseren Newsletter.";	
+		else
+			{
+			$textout="Hier ist leider ein Fehler passiert. Deine Konto wurde nicht im System gefunden.";
+			}			
 		}
 
 ?>
@@ -177,7 +216,7 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 
 <!--	<link rel="stylesheet" type="text/css" href="paint.css"> -->
 
-  <title>Pewosa - Newsletteranmeldung</title>	
+  <title>Pewosa - Presseanmeldung</title>	
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -224,62 +263,114 @@ if(isset($errorMessage)) {
 	<div id="mainview">
 	
 	<?
+
 	If (!isset($_GET['out']) AND !isset($_GET['activationcode']))
 		{
+
 		If ((!isset($_POST['new'])) OR ((isset($_POST['new'])) AND $double))
 			{
 			If ($double){echo "E-Mail-Adresse existiert bereits...";}
 			?>
-		
-		
 
 			<br>
-			<br>		
-			<table border=0 class="centred">
-
+			<br><table border=0 class="centred">
+		
 			<tr><td class='cell' colspan=42 >
 			<h1>
-			Pewosa - Anmelden für unseren Newsletter
-			</h1>
-			</td></tr>
+			Pewosa - Anmelden für unsere Presseverteiler
+			</h1></td></tr>
 
 			<tr><td class='cell' colspan=42 bgcolor='#99ccff'><Font size=3>
-			Datenschutz ist uns PIRATEN besonders wichtig, deshalb musst Du uns Deinen Namen natürlich nicht verraten, wenn Du unseren Newsletter abonnieren möchtest.<br>
-			Eine E-Mail-Adresse brauchen wir aber schon. Wir versprechen, Deine Daten nicht an Dritte weiterzugeben. Unsere Server stehen in Deutschland.
+			Datenschutz ist uns PIRATEN besonders wichtig, deshalb musst Du uns für eine Anmeldung für unseren Presseverteiler nicht alle Daten verraten.<br>
+			Eine E-Mail-Adresse und Deinen Namen brauchen wir aber schon. Teile uns ggf. auch gern in den Notizen mit, warum Du nur in bestimmte Verteiler möchtest.<br> 
+			Wir versprechen, Deine Daten nicht an Dritte weiterzugeben. Unsere Server stehen in Deutschland.
 			</Font></td></tr>
-	
-	
+		
 			<tr height=20>
-				<th class='cell' colspan=1 bgcolor='#cccccc'>Vorname</th>
-				<th class='cell' colspan=1 bgcolor='#cccccc'>Nachname</th>
-				</tr><tr><form action='regnews.php' method='post'>
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Name</th>
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Unternehmen</th>
+				</tr><tr><form action='regcust.php' method='post'>
 				<?
 		
-				echo "<td class='cell' colspan=1 bgcolor='#99ccff'>";
-				echo "<input type='text' name='c_firstname' value='$firstname' placeholder='Vorname' size='50' class='form-control'>";
+				echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
+				echo "<input type='text' required name='c_firstname' value='$firstname' placeholder='Vorname' size='50' class='form-control'>";
 				echo "</td>";				
-				echo "<td class='cell' colspan=1 bgcolor='#99ccff'>";
-				echo "<input type='text' name='c_lastname' value='$lastname' placeholder='Nachname' size='50' class='form-control'>";			
+				echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_company' value='$company' placeholder='Unternehmen' size='50' class='form-control'>";			
 				echo "</td>";		
 				?>	
 				</tr><tr>
-				<th class='cell' colspan=2 bgcolor='#cccccc'>E-Mail</th>		
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Nachname</th>		
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Telefon</th>
 				</tr><tr>
 				<?
 				echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
-				echo "<input type='email' required name='c_email' value='' placeholder='mail@mail.de' size='50' class='form-control'></td>";
-		
+				echo "<input type='text' required name='c_lastname' value='$lastname' placeholder='Nachname' size='50' class='form-control'></td>";
+				echo "<td class='cell' bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_phone' value='$phone' placeholder='Festnetz' class='form-control'></td>";		
+				echo "<td class='cell' bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_cellphone' value='$cellphone' placeholder='Handy' class='form-control'></td>";	
+				?>				
+				</tr><tr>
+				<th class='cell' colspan=2 bgcolor='#cccccc'>E-Mail</th>
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Geburtstag</th>
+				</tr><tr>
+				<?
+				echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
+				echo "<input type='email' required name='c_email' value='$email' placeholder='mail@mail.de' size='50' class='form-control'></td>";
+				echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
+				$teile = explode("-", $birthdate);
+				$jahr=$teile[0];
+				$monat=$teile[1];
+				$tag=$teile[2];
+				$b_show=$tag.".".$monat.".".$jahr;
+				//echo "<input type='text' name='c_birthdate' value='$b_show' placeholder='TT.MM.JJJJ' size='50' class='form-control'></td>";		
+				echo "<input type='text' name='c_birthdate' placeholder='TT.MM.JJJJ' size='50' class='form-control'></td>";
+				?>	
+				</tr><tr>
+				<th class='cell' bgcolor='#cccccc'>Straße</th>
+				<th class='cell' bgcolor='#cccccc'>Nr</th>
+				<th class='cell' bgcolor='#cccccc'>PLZ</th>			
+				<th class='cell' bgcolor='#cccccc'>Stadt</th>	
+				</tr><tr>
+				<?
+				echo "<td class='cell' bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_street' value='$street' placeholder='Musterstraße' class='form-control'></td>";
+				echo "<td class='cell' bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_streetnumber' value='$streetnumber' placeholder='42b' class='form-control'></td>";		
+				echo "<td class='cell' bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_zipcode' value='$zipcode' placeholder='12345' class='form-control'></td>";	
+				echo "<td class='cell' bgcolor='#99ccff'>";
+				echo "<input type='text' name='c_city' value='$city' placeholder='Musterstadt' class='form-control'></td>";
+				?>				
+				</tr><tr>
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Verteiler</th>	
+				<th class='cell' colspan=2 bgcolor='#cccccc'>Notizen</th>
+				</tr><tr>
+				<?
+				echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
+			
+				//Nun werden alle Verteilerlisten aufgeführt
+				echo "<div class='scroll'>";
+				echo "<input type='checkbox' name='box1' checked> Großer Verteiler (Alle PMs) <br>";
+				echo "<input type='checkbox' name='box2'> Fach-Verteiler <br>";
+				echo "<input type='checkbox' name='box3'> Regionalverteiler <br>";
+				echo "<input type='checkbox' name='box4'> Spezialverteiler (Info in Notizen) <br>";
+
+				echo "</td>";
+				echo "<td colspan=2 bgcolor='#99ccff'>";
+				echo "<textarea rows='5' cols='35' name='c_notes' class='form-control'>$notes</textarea></td>";	
+
+				
 				?>
 			</tr><tr><td colspan='42' align='right'>
 			<button type='submit' class='btn btn-primary' title='Speichern' name='new' value='1'>
 			<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eintragen</button></td></tr></form>
-
 			<tr><td class='cell' colspan=42 >	
 			<a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><Font Size=3>Zurück zur Hauptseite</Font></a>
 			<br><br>
-			<a href='regcust.php'><font size=3>Du möchtest unsere Pressemitteilungen bekommen?</font></a>
+			<a href='regnews.php'><Font Size=3>Du möchtest unseren Newsletter bekommen?</Font></a>
 			</td></tr>
-
 			</table>
 			<?
 			}
@@ -287,6 +378,7 @@ if(isset($errorMessage)) {
 			{
 			echo "Vielen Dank!";
 			}
+			
 		}
 	else
 		{
@@ -299,10 +391,10 @@ if(isset($errorMessage)) {
 		<?
 		echo "$textout";
 		?>
-		</h1><a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><font size=3>Zur Hauptseite</font></a></td></tr></table>
+		</h1>><a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><font size=3>Zur Hauptseite</font></a></td></tr></table>
 		<?
 		}
-		?>
+?>
 	</div>
 
 
