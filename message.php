@@ -184,6 +184,16 @@ function canStore($pressreleaseID,$user){
 	return false;
 }
 
+function canArchive($pressreleaseID,$user){
+	if (empty($user)) die("ERROR: function canArchive parameter user must NOT be empty!");
+	if (empty($pressreleaseID)) die("ERROR: function canArchive parameter pressreleaseID must NOT be empty!");
+
+	if (getPmState($pressreleaseID)!=-2 AND getPmState($pressreleaseID)!=-3) {
+		return true;
+	}
+	return false;
+}
+
 function canRelease($pressreleaseID,$user){
 	if (empty($user)) die("ERROR: function canRelease parameter user must NOT be empty!");
 	if (empty($pressreleaseID)) die("ERROR: function canRelease parameter pressreleaseID must NOT be empty!");
@@ -403,7 +413,7 @@ function checkLegitimation($action,$pressreleaseID,$loggedinuserid){
 
 	    case "Archivieren":
 	        echo "\n<!-- ACTION: Archivieren -->\n";
-		if (canStore($pressreleaseID,$loggedinuserid)) 
+		if (canArchive($pressreleaseID,$loggedinuserid)) 
 			{ return true;}
 		else {die_nicely("Archivieren nicht möglich bei PM mit sendstate ".getPmState($pressreleaseID));}
 
@@ -692,10 +702,22 @@ If (($action=='Freigeben') && userIsPressagend($loggedinuserid) ){
 //echo "<p>pressreleaseID = $pressreleaseID</p>";
 
 If ($action=='edit') {
+	$query = "SELECT confirmationid1 FROM `pressrelease` WHERE id =".$pressreleaseID;
+	$checkdata = mysql_query($query) or die("Fehler Edit:".mysql_error());
+	if(mysql_num_rows($checkdata)==1)
+		{	
+		while($row = mysql_fetch_object($checkdata))
+			{
+				$confirmationid1=$row->confirmationid1;
+			}
+		}
+	if ($confirmationid1 > 0){
+		removePM2ndReleaseRequest($pressreleaseID);
+	} else {
+		removePMReleaseRequest ($pressreleaseID);
+	}
+
 	$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='0', sendagent=-1, confirmationid1=-1, confirmationid1bypressagent=-1, confirmationid2=-1, confirmationid2bypressagent=-1 WHERE id='$sqlpressreleaseID';";
-	
-	//pushnotification löschen
-	removePMReleaseRequest ($pressreleaseID);
 	$send = mysql_query($query) or die("Fehler Edit:".mysql_error());
 }
 
@@ -741,10 +763,10 @@ if ($pmstate == 0) {
 };
 if(($pmstate == -2) | ($pmstate > 0 )) {
 	//versand
-//	$labelentwurf=" class=\"active\"";
-//	$labelPressefrei=" class=\"active\"";
-//	$labelfirstauth=" class=\"active\"";
-//	$labelsecondauth=" class=\"active\"";
+	$labelentwurf=" class=\"noPrint\"";
+	$labelPressefrei=" class=\"noPrint\"";
+	$labelfirstauth=" class=\"noPrint\"";
+	$labelsecondauth=" class=\"noPrint\"";
 	$labelsending=" class=\"active\"";
 }
 
@@ -831,7 +853,7 @@ else if ($pressreleaseID == -1) {
 
 
 	<!-- ********************** VERTEILER ********************************************* -->
-	<div class="panel panel-default">
+	<div class="panel panel-default noPrint">
 	<div class="panel-heading"><h3 class="panel-title">Verteiler:</h3></div>
 	  <div class="panel-body">
 	<?php
@@ -987,7 +1009,7 @@ else if ($pressreleaseID == -1) {
 
 
 <!-- ************** Anfang Ansprechpartner: *************************************************** -->
-	<div class="panel panel-default">
+	<div class="panel panel-default noPrint">
 	<div class="panel-heading"><h3 class="panel-title">Ansprechpartner:</h3></div>
 	  <div class="panel-body">
 	<?php
@@ -1032,7 +1054,7 @@ else if ($pressreleaseID == -1) {
 <!-- ########################## ENDE Ansprechpartner ############################################# -->
 
 <!-- ************** Anfang Presseverantwortlicher: *************************************************** -->
-	<div class="panel panel-default">
+	<div class="panel panel-default noPrint">
 	<div class="panel-heading"><h3 class="panel-title">Presseverantwortlicher:</h3></div>
 	  <div class="panel-body">
 	<?php
@@ -1220,7 +1242,7 @@ If ($disabled!='disabled')
 		echo "<p name='Betreff' style='font-size: 16pt'>$sqlBetreff</p>";}
 	   else	{
 		$readonly='';
-		echo "<input name='Betreff' type='text' class='mainCol' value='$sqlBetreff' $readonly style='font-size: 16pt' required placeholder='PM: Jemand sagt Dinge'>";}
+		echo "<input name='Betreff' type='text' class='mainCol' value='$sqlBetreff' $readonly style='font-size: 16pt' required placeholder='Jemand sagt Dinge: Dinge '>";}
 	  ?>
 
 	 </div>
