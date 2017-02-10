@@ -52,7 +52,7 @@ function newPMReleaseRequest ($pmid){
 
 	foreach ($usernameArr as &$username) {
 		$fields = array
-		( 'to'=> '/topics/user'.$username,
+		( 'to'=> '/topics/user'.PUSH_INSTANZ.$username,
 		  'data'            => $msg);
 		pushMsgFirefox($fields);
 		pushMsg($fields);
@@ -69,7 +69,7 @@ function removePMReleaseRequest ($pmid){
 	);
 	foreach ($usernameArr as &$username) {
 		$fields = array
-		( 'to'=> '/topics/user'.$username,
+		( 'to'=> '/topics/user'.PUSH_INSTANZ.$username,
 		  'data'            => $msg);
 		pushMsgFirefox($fields);
 		pushMsg($fields);
@@ -96,7 +96,7 @@ function newPM2ndReleaseRequest ($pmid){
 	foreach ($usernameArr as &$username) {
 		echo "<!-- USERNAME2 $username -->";
 		$fields = array
-		( 'to'=> '/topics/user'.$username,
+		( 'to'=> '/topics/user'.PUSH_INSTANZ.$username,
 		  'data'            => $msg);
 		pushMsgFirefox($fields);
 		pushMsg($fields);
@@ -112,7 +112,7 @@ function removePM2ndReleaseRequest ($pmid){
 	foreach ($usernameArr as &$username) {
 	echo "\n<!-- REMOVE USERNAME: $username -->\n";
 		$fields = array
-		( 'to'=> '/topics/user'.$username,
+		( 'to'=> '/topics/user'.PUSH_INSTANZ.$username,
 		  'data'            => $msg);
 		pushMsgFirefox($fields);
 		pushMsg($fields);

@@ -161,7 +161,7 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 			?>				
 			</tr><tr>
 			<th class='cell' colspan=2 bgcolor='#cccccc'>E-Mail</th>
-			<th class='cell' colspan=2 bgcolor='#cccccc'>Abgeordneter</th>
+			<th class='cell' colspan=2 bgcolor='#cccccc'>Freizeichner</th>
 			</tr><tr>
 			<?
 			echo "<td class='cell' colspan=2 bgcolor='#99ccff'>";
@@ -180,7 +180,7 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 			<th class='cell' bgcolor='#cccccc' >Username</th>
 			<th class='cell' bgcolor='#cccccc' >Passwort</th>
 			<th class='cell' bgcolor='#cccccc'>Pressemitarbeiter</th>
-			<th class='cell' bgcolor='#cccccc'>admin</th>			
+			<th class='cell' bgcolor='#cccccc'>Administrator</th>			
 			</tr><tr>
 			<?
 			echo "<td class='cell' bgcolor='#99ccff'>";

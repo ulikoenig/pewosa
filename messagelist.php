@@ -28,8 +28,8 @@ echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
 		//Es gibt noch keine Speicherung für diesen Nutzer und dieses Menü? - Dann legen wir eine fest und in der Datenbank an
 		$menu_point=1;
 		$menu_direction=0;
-		$query = "INSERT INTO `pewosa`.`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",1,".$menu_point.",".$menu_direction.")";
-		$send = mysql_query($query) or die("Fehler:".mysql_error());
+		$query = "INSERT INTO ".MYSQLDB.".`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",1,".$menu_point.",".$menu_direction.")";
+		$send = mysql_query($query) or die("Fehler 1:".mysql_error(). " Query: ".$query);
 		}
 
 	//Hier schauen wir noch, ob es ein-ausblenden schon gibt
@@ -47,8 +47,8 @@ echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
 	else
 		{
 		//Es gibt noch keine Speicherung für diesen Nutzer und dieses Menü? - Dann legen wir eine fest und in der Datenbank an
-		$query = "INSERT INTO `pewosa`.`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",7,1,0)";
-		$send = mysql_query($query) or die("Fehler:".mysql_error());
+		$query = "INSERT INTO ".MYSQLDB.".`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",7,1,0)";
+		$send = mysql_query($query) or die("Fehler 2:".mysql_error());
 		$menu_check='0';	
 		}
 
@@ -62,7 +62,7 @@ echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
 		If ($take==$menu_point AND $menu_direction==0){$dir=1;}
 		If (($take==$menu_point AND $menu_direction==1) OR ($take!=$menu_point)){$dir=0;}
 		$change = "UPDATE sorting Set menu_point='".$take."',menu_direction='".$dir."' WHERE user_id=$loggedinuserid AND menu_id=1";
-		$update = mysql_query($change)or die("Fehler.".mysql_error());
+		$update = mysql_query($change)or die("Fehler 3.".mysql_error());
 		//Natürlich müssen wir nun auch anpassen
 		$menu_point=$take;
 		$menu_direction=$dir;					
@@ -75,7 +75,7 @@ echo "<meta http-equiv=\"refresh\" content=\"30\" > ";
 		//$take=$_POST['blending'];
 		If ($menu_check==1){$take=0;}else{$take=1;}
 		$change = "UPDATE sorting Set menu_direction='".$take."' WHERE user_id=$loggedinuserid AND menu_id=7";
-		$update = mysql_query($change)or die("Fehler.".mysql_error());
+		$update = mysql_query($change)or die("Fehler 4.".mysql_error());
 		//Natürlich müssen wir nun auch anpassen
 		$menu_check=$take;
 		//echo "test $take";				
@@ -93,7 +93,7 @@ If (isset($_POST['send_man_id']))
 		//Gibt es genau eine auf die es stimmt wird diese geupdatet
 		$senddate_db=date("Y-m-d H:i:s");
 		$change = "UPDATE pressrelease Set sendnow='1',senddate='".$senddate_db."' WHERE id=$send_man_id";
-		$update = mysql_query($change)or die("Fehler.".mysql_error());		
+		$update = mysql_query($change)or die("Fehler 5.".mysql_error());		
 		}
 	}
 
@@ -129,7 +129,7 @@ If (isset($_POST['Freigabe1']))
 	If ($youmaygive)
 		{
 		//Freigabe erfolgt
-		$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid1='$loggedinuserid' WHERE id='$Freigabe1';";
+		$query = "UPDATE ".MYSQLDB.".`pressrelease` SET confirmationid1='$loggedinuserid' WHERE id='$Freigabe1';";
 		$send = mysql_query($query) or die("Fehler:".mysql_error());
 		//pushnotification Freigabe 1 löschen
 		removePMReleaseRequest ($Freigabe1);
@@ -160,7 +160,7 @@ If (isset($_POST['Freigabe2']))
 		{
 		//2te Freigabe erfolgt
 		//Damit wird auch automatisch sendstate auf pending gesetzt
-		$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid2='$loggedinuserid', sendstate=-1 WHERE id='$Freigabe2';";
+		$query = "UPDATE ".MYSQLDB.".`pressrelease` SET confirmationid2='$loggedinuserid', sendstate=-1 WHERE id='$Freigabe2';";
 		$send = mysql_query($query) or die("Fehler:".mysql_error());
 		//pushnotification Freigabe 2 löschen
 		removePM2ndReleaseRequest($Freigabe2);
@@ -174,7 +174,7 @@ If (isset($_POST['Freigabe3']))
 	$Freigabe3=$_POST['Freigabe3'];	
 	$Freigabe4=$_POST['Freigabe4'];
 	//Hier müssten eigentlich noch Sicherheitstests geben
-	$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid1bypressagent='$loggedinuserid', confirmationid1='$Freigabe3' WHERE id='$Freigabe4';";
+	$query = "UPDATE ".MYSQLDB.".`pressrelease` SET confirmationid1bypressagent='$loggedinuserid', confirmationid1='$Freigabe3' WHERE id='$Freigabe4';";
 	$send = mysql_query($query) or die("Fehler:".mysql_error());
 	//pushnotification Freigabe 1 löschen
 	removePMReleaseRequest ($Freigabe4);
@@ -188,7 +188,7 @@ If (isset($_POST['Freigabe5']))
 	$Freigabe5=$_POST['Freigabe5'];	
 	$Freigabe6=$_POST['Freigabe6'];
 	//Hier müssten eigentlich noch Sicherheitstests geben
-	$query = "UPDATE `pewosa`.`pressrelease` SET confirmationid2bypressagent='$loggedinuserid', confirmationid2='$Freigabe5', sendstate=-1 WHERE id='$Freigabe6';";
+	$query = "UPDATE ".MYSQLDB.".`pressrelease` SET confirmationid2bypressagent='$loggedinuserid', confirmationid2='$Freigabe5', sendstate=-1 WHERE id='$Freigabe6';";
 	$send = mysql_query($query) or die("Fehler:".mysql_error());
 	//pushnotification Freigabe 2 löschen
 	removePM2ndReleaseRequest($Freigabe6);

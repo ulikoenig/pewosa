@@ -545,11 +545,11 @@ If ($action=='Speichern' OR $action=='Senden' OR $action=='Freigeben')
 	{
 			
 		if ($pressreleaseID == "-1"){
-			$query = "INSERT INTO `pewosa`.`pressrelease` ( `subject` , `body` , `pressagentid`, `tags`, `contact`, `sendstate`,`senddate`, `sendnow` ) VALUES ('$sqlBetreff', '$sqlBody', '$sqlpressagent','$sqlTags','$sqlContact','0','$senddate_db','$sendnow');";
+			$query = "INSERT INTO ".MYSQLDB.".`pressrelease` ( `subject` , `body` , `pressagentid`, `tags`, `contact`, `sendstate`,`senddate`, `sendnow` ) VALUES ('$sqlBetreff', '$sqlBody', '$sqlpressagent','$sqlTags','$sqlContact','0','$senddate_db','$sendnow');";
 			$send = mysql_query($query) or die("Fehler A:".mysql_error());
 			$pressreleaseID = mysql_insert_id();}
 		else {
-			$query = "UPDATE `pewosa`.`pressrelease` SET 
+			$query = "UPDATE ".MYSQLDB.".`pressrelease` SET 
 			subject='$sqlBetreff', body='$sqlBody', pressagentid='$sqlpressagent', tags='$sqlTags', contact='$sqlContact', confirmationid1='-1', confirmationid2='-1' 
 			, confirmationid1bypressagent='-1', confirmationid2bypressagent='-1', senddate='$senddate_db', sendnow='$sendnow' WHERE id='$sqlpressreleaseID';";
 			//echo "aufgabe $query";
@@ -559,7 +559,7 @@ If ($action=='Speichern' OR $action=='Senden' OR $action=='Freigeben')
 
 		
 		//Hier werden alle Verknüpfungen zu Verteilern und Co gelöscht
-		$query = "DELETE FROM `pewosa`.`pressreleaseconnection` WHERE pressreleaseID=".$pressreleaseID.";";
+		$query = "DELETE FROM ".MYSQLDB.".`pressreleaseconnection` WHERE pressreleaseID=".$pressreleaseID.";";
 		$send = mysql_query($query) or die("Fehler C:".mysql_error());
 		//echo "<p>SQLResult: $send, $query</p>";
 
@@ -567,7 +567,7 @@ If ($action=='Speichern' OR $action=='Senden' OR $action=='Freigeben')
 		For ($i=1;$i<=$listmaxid;$i++){
 			If (isset($list[$i])) 
 				{
-					$query = "INSERT INTO `pewosa`.`pressreleaseconnection` ( `pressreleaseID`, `listID`) VALUES (".$pressreleaseID.",".$i.");";
+					$query = "INSERT INTO ".MYSQLDB.".`pressreleaseconnection` ( `pressreleaseID`, `listID`) VALUES (".$pressreleaseID.",".$i.");";
 					//echo "<p>Query: $query</p>";
 					$send = mysql_query($query) or die("Fehler D:".mysql_error());
 					//echo "<p>SQLResult: $send</p>";
@@ -578,7 +578,7 @@ If ($action=='Speichern' OR $action=='Senden' OR $action=='Freigeben')
 		For ($i=1;$i<=$singlecustomersmaxid;$i++){
 			If (isset($singlecustomer[$i])) 
 				{
-					$query = "INSERT INTO `pewosa`.`pressreleaseconnection` ( `pressreleaseID`, `customerID`) VALUES (".$pressreleaseID.",".$i.");";
+					$query = "INSERT INTO ".MYSQLDB.".`pressreleaseconnection` ( `pressreleaseID`, `customerID`) VALUES (".$pressreleaseID.",".$i.");";
 					//echo "<p>Query: $query</p>";
 					$send = mysql_query($query) or die("Fehler Einzel:".mysql_error());
 					//echo "<p>SQLResult: $send</p>";
@@ -589,7 +589,7 @@ If ($action=='Speichern' OR $action=='Senden' OR $action=='Freigeben')
 		For ($i=1;$i<=$distributormaxid;$i++){
 			If (isset($distributor[$i])) 
 				{
-					$query = "INSERT INTO `pewosa`.`pressreleaseconnection` ( `pressreleaseID`, `userID`) VALUES (".$pressreleaseID.",".$i.");";
+					$query = "INSERT INTO ".MYSQLDB.".`pressreleaseconnection` ( `pressreleaseID`, `userID`) VALUES (".$pressreleaseID.",".$i.");";
 					//echo "<p>Query: $query</p>";
 					$send = mysql_query($query) or die("Fehler Ansprech:".mysql_error());
 					//echo "<p>SQLResult: $send</p>";
@@ -620,7 +620,7 @@ If ($action=='Speichern' OR $action=='Senden' OR $action=='Freigeben')
 			$checkdata = mysql_query($query);
 			if(mysql_num_rows($checkdata)==1)
 				{		
-				$query = "UPDATE `pewosa`.`pressrelease` SET sendagent='$loggedinuserid', senddate ='$senddate_db', sendstate='-1' WHERE id='$sqlpressreleaseID';";
+				$query = "UPDATE ".MYSQLDB.".`pressrelease` SET sendagent='$loggedinuserid', senddate ='$senddate_db', sendstate='-1' WHERE id='$sqlpressreleaseID';";
 				$send = mysql_query($query) or die("Fehler S:".mysql_error());
 				//echo "<p>SQLQUERY: $query</p>";
 				//echo "SQLResult: $send, id: $pressreleaseID";
@@ -639,10 +639,10 @@ If ($action=='delete')
 	If (canDelete($pressreleaseID,$loggedinuserid))
 		{
 		//Weg damit
-		$query = "DELETE FROM `pewosa`.`pressrelease` WHERE id=".$pressreleaseID.";";
+		$query = "DELETE FROM ".MYSQLDB.".`pressrelease` WHERE id=".$pressreleaseID.";";
 		$send = mysql_query($query) or die("Fehler DelA:".mysql_error());
 
-		$query = "DELETE FROM `pewosa`.`pressreleaseconnection` WHERE pressreleaseID=".$pressreleaseID.";";
+		$query = "DELETE FROM ".MYSQLDB.".`pressreleaseconnection` WHERE pressreleaseID=".$pressreleaseID.";";
 		$send = mysql_query($query) or die("Fehler DelB:".mysql_error());
 		//Script abbrechen!
 		echo "<h3>Pressemitteilung <i>$Betreff</i> wurde gelöscht</h3>";include_once("footer.php");exit();
@@ -655,7 +655,7 @@ If ($action=='Archivieren')
 	{
 	If (canDelete($pressreleaseID,$loggedinuserid))
 		{
-		$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='-5' WHERE id='$sqlpressreleaseID';";
+		$query = "UPDATE ".MYSQLDB.".`pressrelease` SET sendstate='-5' WHERE id='$sqlpressreleaseID';";
 		$send = mysql_query($query) or die("Fehler S:".mysql_error());
 		$sendstate=-5;
 		}
@@ -666,7 +666,7 @@ If ($action=='Reaktivieren')
 	{
 	If (canDelete($pressreleaseID,$loggedinuserid))
 		{
-		$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='0' WHERE id='$sqlpressreleaseID';";
+		$query = "UPDATE ".MYSQLDB.".`pressrelease` SET sendstate='0' WHERE id='$sqlpressreleaseID';";
 		$send = mysql_query($query) or die("Fehler S:".mysql_error());
 		$sendstate=0;		
 		}
@@ -687,7 +687,7 @@ If (($action=='Freigeben') && userIsPressagend($loggedinuserid) ){
 
 		//if ($sendnow){$sendnowtime = date("Y-m-d H:i:s");} else {$sendnowtime="";};
 
-		$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='-3', sendagent=$loggedinuserid WHERE id='$sqlpressreleaseID';";
+		$query = "UPDATE ".MYSQLDB.".`pressrelease` SET sendstate='-3', sendagent=$loggedinuserid WHERE id='$sqlpressreleaseID';";
 		$send = mysql_query($query) or die("Fehler X:".mysql_error());
 		echo "<button type='button' class='btn btn-success'>Freigegeben</button>";
 		//pushnotification
@@ -717,7 +717,7 @@ If ($action=='edit') {
 		removePMReleaseRequest ($pressreleaseID);
 	}
 
-	$query = "UPDATE `pewosa`.`pressrelease` SET sendstate='0', sendagent=-1, confirmationid1=-1, confirmationid1bypressagent=-1, confirmationid2=-1, confirmationid2bypressagent=-1 WHERE id='$sqlpressreleaseID';";
+	$query = "UPDATE ".MYSQLDB.".`pressrelease` SET sendstate='0', sendagent=-1, confirmationid1=-1, confirmationid1bypressagent=-1, confirmationid2=-1, confirmationid2bypressagent=-1 WHERE id='$sqlpressreleaseID';";
 	$send = mysql_query($query) or die("Fehler Edit:".mysql_error());
 }
 
@@ -1484,7 +1484,6 @@ If ($disabled!='disabled')
 
 	
 
-<?php if($loggedinuserid == 14) {?><script> var bcount= 0; document.getElementById('editbutton').onmouseover = function(){ bcount++; document.getElementById('editbutton').style.position="fixed"; document.getElementById('editbutton').style.left=(Math.random()*200)+"px"; document.getElementById('editbutton').style.bottom=(Math.random()*200)+"px"; if (bcount > 5) { document.getElementById('editbutton').onmouseover = ""; document.getElementById('editbutton').style.position=""; document.getElementById('editbutton').style.left= ""; document.getElementById('editbutton').style.bottom=""; } }</script><?php } ?>
 
 	<?
 	}

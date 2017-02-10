@@ -8,51 +8,9 @@ require 'lib/PHPMailerAutoload.php';
 require("UrlLinker.php");
 include_once ("connection.php");
 include_once("config.php");
+include_once("functions.php");
 
 
-function sendactivation($subject,$body,$receiverMail,$receiverName){
-	$mail = new PHPMailer;
-	$mail->CharSet = 'UTF-8';
-
-	$mail->isSMTP();                                      // Set mailer to use SMTP
-	$mail->Host = 'zimap.bytemine.net';  // Specify main and backup SMTP servers
-	$mail->SMTPAuth = true;                               // Enable SMTP authentication
-	$mail->Username = 'presse@piratenfraktion-sh.de';                 // SMTP username
-	$mail->Password = 'umgrou9ngkdq';                           // SMTP password
-	$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-	$mail->Port = 587;                                    // TCP port to connect to
-
-	$mail->setFrom('presse@piratenfraktion-sh.de', 'Piratenfraktion SH: Pressestelle');
-	$mail->addAddress($receiverMail, $receiverName);     // Add a recipient
-
-	$mail->isHTML(false);                                  // Set email format to HTML
-	include("fontdata.php");
-
-	setlocale (LC_ALL, 'de_DE');
-
-	$htmlFooter = "<p style=\"font-size: 10px; line-height: 12px; color: rgb(33, 33, 33); margin-bottom: 10px;\"><a href=\"mailto:presse@piratenfraktion-sh.de\" style=\"color: rgb(71, 124, 204); text-decoration: none; display: inline;\">presse@piratenfraktion-sh.de</a><span style=\"color: #212121;\"></span></p><p style=\"font-size: 10px; line-height: 12px; margin-bottom: 10px;\"><span style=\"font-weight: bold; color: rgb(33, 33, 33); display: inline;\">Piratenfraktion im Schleswig-Holsteinischen Landtag</span><br><span style=\"color: rgb(33, 33, 33); display: inline;\">0431 988 1337</span><br/><span style=\"color: rgb(33, 33, 33); display: inline;\">Düsternbrooker Weg 70</span><br/><span style=\"color: rgb(33, 33, 33); display: inline;\">24105 Kiel</span><br/><a href=\"https://piratenfraktion-sh.de\" style=\"color: rgb(71, 124, 204); text-decoration: none; display: inline;\">https://piratenfraktion-sh.de</a></p><p style=\"font-size: 0px; line-height: 0; font-family: Helvetica,Arial,sans-serif;\"><a style=\"text-decoration: none; display: inline;\" href=\"https://twitter.com/FraktionSH\">$twitterlogo</a><span style=\"white-space: nowrap; display: inline;\">$spacerlogo</span><a style=\"text-decoration: none; display: inline;\" href=\"https://www.facebook.com/Piraten-im-Schleswig-Holsteinischen-Landtag-1709680989297612/\">$facebooklogo</a><span style=\"white-space: nowrap; display: inline;\">$spacerlogo</span><a style=\"text-decoration: none; display: inline;\" href=\"https://www.instagram.com/piratenfraktionsh/\">$instagramlogo</a><span style=\"white-space: nowrap; display: inline;\">$spacerlogo</span><a style=\"text-decoration: none; display: inline;\" href=\"https://www.youtube.com/user/PiratenFraktionSH\">$youtubelogo</a><span style=\"white-space: nowrap; display: inline;\">$spacerlogo</span></p>";
-
-	$textFooter = "\n-- \npresse@piratenfraktion-sh.de\nPiratenfraktion im Schleswig-Holsteinischen Landtag\n0431 988 1337\nDüsternbrooker Weg 70\n24105 Kiel\nhttps://piratenfraktion-sh.de";
-
-
-
-	$htmlBody = "<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"robots\" content=\"noindex,nofollow\"><title>".$subject."</title><style type=\"text/css\">body{max-width:40em;font-family: \"Open Sans\",\"Sans Serif\";background-color: orange;} h1 {font-family:\"Bebas Neue\",\"Sans Serif\";} .container {background-color: white;padding:1em;}</style></head><body><div class=\"container\">$logo<p></p><h3>".$subject."</h3><p>".strftime("%A, %e %B %G")."</p><p>".$body."</p></div>$htmlFooter</body></html>";
-
-
-	$textBody = $subject."*\n\n".strftime("%A, %e %B %G")."\n\n".$body.$textFooter;
-
-	$mail->Subject = $subject;
-	$mail->Body    = $htmlBody;
-	$mail->AltBody = $textBody;
-
-	if(!$mail->send()) {
- 		echo 'Message could not be sent.';
-		echo 'Mailer Error: ' . $mail->ErrorInfo;
-	} else {
-		//echo 'Message has been sent';
-	}
-
-} // ENDE sendpm
 
 	If (isset($_POST['new']))
 		{
@@ -121,7 +79,7 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			echo "Fast geschafft! Wir haben Dir eine Aktivierungsmail geschickt. Bitte klicke auf den Link in der Mail, um Dein Pressekonto zu aktivieren.";
 			//Hier Mail verschicken
 			$subject='Aktivierung Deines Presse-Kontos';
-			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unsere Pressemitteilungen zu abonnieren:\n ulikoenig.de/pewosa/regcust.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jeder Pressemitteilung selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
+			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unsere Pressemitteilungen zu abonnieren:\n ".BASEURL."/regcust.php?activationcode=".$activationcode."\n\n".QUITPRESS."\n\n ".PRESSFORMAL;
 			$body = htmlEscapeAndLinkUrls ( $body );
 			sendactivation($subject,$body,$c_email,$receiverName);
 		
@@ -298,13 +256,11 @@ if(isset($errorMessage)) {
 		
 			<tr><td class='cell' colspan=42 >
 			<h1>
-			Pewosa - Anmelden für unsere Presseverteiler
+			Pewosa - Anmelden für Presseverteiler
 			</h1></td></tr>
 
 			<tr><td class='cell' colspan=42 bgcolor='#99ccff'><Font size=3>
-			Datenschutz ist uns PIRATEN besonders wichtig, deshalb musst Du uns für eine Anmeldung für unseren Presseverteiler nicht alle Daten verraten.<br>
-			Eine E-Mail-Adresse und Deinen Namen brauchen wir aber schon. Teile uns ggf. auch gern in den Notizen mit, warum Du nur in bestimmte Verteiler möchtest.<br> 
-			Wir versprechen, Deine Daten nicht an Dritte weiterzugeben. Unsere Server stehen in Deutschland.
+			<? registertext(); ?>
 			</Font></td></tr>
 		
 			<tr height=20>
@@ -388,7 +344,9 @@ if(isset($errorMessage)) {
 			<button type='submit' class='btn btn-primary' title='Speichern' name='new' value='1'>
 			<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eintragen</button></td></tr></form>
 			<tr><td class='cell' colspan=42 >	
-			<a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><Font Size=3>Zurück zur Hauptseite</Font></a>
+			<?
+			echo "<a href=".PRESSELINK."><Font Size=3>Zurück zur Hauptseite</Font></a>";
+			?>
 			<br><br>
 			<a href='regnews.php'><Font Size=3>Du möchtest unseren Newsletter bekommen?</Font></a>
 			</td></tr>
@@ -407,13 +365,11 @@ if(isset($errorMessage)) {
 		<br>
 		<br><table border=0 class="centred">
 	
-		<tr><td class='cell' colspan=42 >
+		<tr><td class="cell" colspan=42 >
 		<h1>
 		<?
 		echo "$textout";
-		?>
-		</h1>><a href='http://www.piratenfraktion-sh.de/newsletter-abonnieren/'><font size=3>Zur Hauptseite</font></a></td></tr></table>
-		<?
+		echo "</h1><a href=".PRESSELINK."><font size=3>Zur Hauptseite</font></a></td></tr></table>";
 		}
 ?>
 	</div>

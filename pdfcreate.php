@@ -12,7 +12,7 @@ $pphone=utf8_decode($phone);
 $email=utf8_decode($email);
 $psubject=utf8_decode($subject);
 $pbody=utf8_decode($body);
-$padress=utf8_decode('Düsternbrooker Weg 70');
+$padress=utf8_decode(COMPANYSTREET);
 $timestamp = time();
 $datum = date("d.m.Y",$timestamp);
 
@@ -42,10 +42,11 @@ $pdf->Text(125, 55, "$pname");
 $pdf->SetFont("OpenSans","",10);
 $pdf->Text(125, 62, "$pjobtitle");
 $pdf->Text(125, 67, "$padress");
-$pdf->Text(125, 71, "24105 Kiel");
+$pdf->Text(125, 71, "COMPANYCITY");
 $pdf->Text(125, 77, "Tel.: $pphone");
 $pdf->Text(125, 82, "$pmail");
-$pdf->Text(125, 90, "Kiel, $datum");
+$texting=COMPANYCITYNAME. ", ".$datum;
+$pdf->Text(125, 90, "$texting");
 
 //Festlegen der Betreffzeile
 $pdf->SetFont("Opensans","B",12);

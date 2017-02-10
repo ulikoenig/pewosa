@@ -11,7 +11,7 @@ echo "<p>Letzter E-Mail-Versand vor ".$TimeOffsetSent." Sekunden</p>";
 
 
 		<br>
-        <p>&copy; 2016 by Uli, Jan und Christian</p>
+        <p>&copy; 2017 by ChrUli</p>
 <?php
 
 if ($loggedinadmin > "1"){

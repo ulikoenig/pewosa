@@ -23,7 +23,7 @@ include_once("header.php");
 		//Es gibt noch keine Speicherung für diesen Nutzer und dieses Menü? - Dann legen wir eine fest und in der Datenbank an
 		$menu_point=1;
 		$menu_direction=0;
-		$query = "INSERT INTO `pewosa`.`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",2,".$menu_point.",".$menu_direction.")";
+		$query = "INSERT INTO ".MYSQLDB.".`sorting` ( `user_id`, `menu_id`, `menu_point`,`menu_direction`) VALUES (".$loggedinuserid.",2,".$menu_point.",".$menu_direction.")";
 		$send = mysql_query($query) or die("Fehler:".mysql_error());	
 		}
 

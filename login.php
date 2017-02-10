@@ -6,7 +6,9 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 
 include_once("config.php");
 
-$pdo = new PDO("mysql:host=".$host.";dbname=".$dbname, $user, $pass);
+$pdo = new PDO("mysql:host=".MYSQLHOST.";dbname=".MYSQLDB, MYSQLUSER, MYSQLPASS);
+ 
+
  
 if(isset($_GET['login'])) {
 	$username = $_POST['username'];
