@@ -6,7 +6,6 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 
 include_once("config.php");
 
-
 $pdo = new PDO("mysql:host=".$host.";dbname=".$dbname, $user, $pass);
  
 if(isset($_GET['login'])) {
@@ -29,19 +28,18 @@ if(isset($_GET['login'])) {
 	$result = $statement->execute(array('username' => $username));
 	$user = $statement->fetch();
 	
-		//Überprüfung des Passworts
+	If ($username=="" OR $password==""){$user=false;}
+
+			//Überprüfung des Passworts
 	if ($user !== false && password_verify($password, $user['password']) && $user['deleted'] == 0) {
 		$_SESSION['userid'] = $user['id'];
 		header("Location: ./");
 		echo('<meta http-equiv="refresh" content="0;url=./" />');
 	} else {
-		$errorMessage = "<Font size=3>E-Mail oder Passwort war ung&uuml;ltig<br></Font>";
+		$errorMessage = "<Font size=3>Benutzername oder Passwort war ung&uuml;ltig<br></Font>";
 	}
-	
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -108,11 +106,11 @@ Pewosa - DAS Pressetool
 	if($_SERVER['HTTP_USER_AGENT'] != "de.ulikoenig.pewosa/android"){
 		?>
 		<form action="?login=1" method="post">
-		Benutzername:<br>
-		<input type="username" size="40" maxlength="250" name="username"></Font</td></tr><tr><td class='cell' colspan=42 			bgcolor='#99ccff'>
+		<br>
+		<input type="username" placeholder="Benutzername" required size="40" maxlength="250" name="username"><tr><td class='cell' colspan=42 			bgcolor='#99ccff'>
 		<Font size=3> 
-		Dein Passwort:<br>
-		<input type="password" size="40"  maxlength="250" name="password"></Font></td></tr><tr><td class='cell' colspan=42 bgcolor='#99ccff' align='right'>
+		<br>
+		<input type="password" placeholder="Passwort" size="40"  required maxlength="250" name="password"></Font></td></tr><tr><td class='cell' colspan=42 bgcolor='#99ccff' align='right'>
 		<button type='submit' class='btn btn-primary' title='Speichern' name='new' value='1'> Abschicken </button></td></tr></form>
 		</td></tr>
 		<tr><td class='cell' colspan=42 ><Font size=3><br>
@@ -122,8 +120,11 @@ Pewosa - DAS Pressetool
 		<br><br>
 		<a href='http://www.piratenfraktion-sh.de/impressum/'>Impressum</a>
 		</Font>
+		</Font>
 		<?php
 	} 
+
+
 ?>
 </td></tr>
 </table>
