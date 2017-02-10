@@ -107,7 +107,7 @@ Pewosa - DAS Pressetool
 		?>
 		<form action="?login=1" method="post">
 		<br>
-		<input type="username" placeholder="Benutzername" required size="40" maxlength="250" name="username"><tr><td class='cell' colspan=42 			bgcolor='#99ccff'>
+		<input placeholder="Benutzername" required size="40" maxlength="250" name="username"><tr><td class='cell' colspan=42 			bgcolor='#99ccff'>
 		<Font size=3> 
 		<br>
 		<input type="password" placeholder="Passwort" size="40"  required maxlength="250" name="password"></Font></td></tr><tr><td class='cell' colspan=42 bgcolor='#99ccff' align='right'>
