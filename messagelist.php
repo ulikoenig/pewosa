@@ -464,7 +464,7 @@ If (isset($_POST['Freigabe5']))
 			}		
 		
 		//echo "<br><font color='black' title='$showbodylong'>$showbody</font></a><br><i><span title='$showtagslong'>Tags:  $showtags</span></i></td>";
-		echo "<font color='black' title='$showbodylong'><a href='$send_id'><Font color='#000000' size=4>$showbody</font></a><br><i><span title='$showtagslong'><br>Tags:  $showtags</span></i>";
+		echo "<font color='black' title='$showbodylong'><a href='$send_id'><Font color='#000000' size=4>$showbody</font></font></a><br><i><span title='$showtagslong'><br>Tags:  $showtags</span></i>";
 
 
 		$query = "SELECT firstname, lastname,id,pressagent FROM users";
@@ -756,6 +756,9 @@ If ($sendstate[$take]!=0 AND $sendstate[$take]!=-5)
 			//>0 sending 
 			//-2 sent	
 			$d_show = date("d.m.Y H:i",strtotime($senddate[$take]));
+			If ($sendnow[$take]=='2'){$d_show=$d_show.'<br> Manueller Versand';}
+			If ($sendnow[$take]=='1'){$d_show=$d_show.'<br> Automatischer Versand';}
+			If ($sendnow[$take]=='0'){$d_show=$d_show.'<br> Getimter Versand';}
 			if ($sendstate[$take]!=-5){echo "<td bgcolor='$color'>$d_show";}else{echo "<td bgcolor='$color'>Archiviert";}
 			echo "</td><td bgcolor='$color'>";
 			If ($sendstate[$take]=='-1')
@@ -765,11 +768,18 @@ If ($sendstate[$take]!=0 AND $sendstate[$take]!=-5)
 					echo "<button type='button' class='btn btn-warning' title='Warte auf Versand' disabled><span class='glyphicon glyphicon-hourglass' aria-hidden='true'></span></button>";
 					}
 				else	
-					{ 	
-				    echo "<form action='messagelist.php' method='post' style='display:inline;'>";
-					echo "<input type='hidden' name='send_man_id' value='$take'>";
-					echo "<button type='submit' class='btn btn-warning' title='Bereit für manuellen Versand'><span class='glyphicon glyphicon-envelope' aria-hidden='true'></span> Senden</button>";
-					echo "</form>";
+					{ 
+					If ($loggedinpressagent > "1")
+						{
+					    	echo "<form action='messagelist.php' method='post' style='display:inline;'>";
+						echo "<input type='hidden' name='send_man_id' value='$take'>";
+						echo "<button type='submit' class='btn btn-warning' title='Bereit für manuellen Versand'><span class='glyphicon glyphicon-envelope' aria-hidden='true'></span> Senden</button>";
+						echo "</form>";
+						}
+					else	
+						{
+						echo "<button type='button' disabled class='btn btn-warning' title='Bereit für manuellen Versand durch die Presse'></span> Warte auf Versand</button>";
+						}
 					}				
 				}
 			If ($sendstate[$take]=='-2'){echo "<button type='button' class='btn btn-success' title='Versand erfolgreich' disabled><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button>";}
