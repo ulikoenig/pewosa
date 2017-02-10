@@ -16,9 +16,10 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 
 		If (isset($_POST['safe']) AND $take!='xxx')
 			{
+			$hand=md5($_POST['c_email'].$take);		
 			$change = "UPDATE customerNewsletter Set 
 			firstname='".$_POST['c_firstname']."',lastname='".$_POST['c_lastname']."',
-			email='".$_POST['c_email']."'		
+			email='".$_POST['c_email']."', hash='".$hand."'		
 			WHERE id='$take'";
 			$update = mysql_query($change)or die("Speichern leider fehlgeschlagen.".mysql_error());			
 			echo "<button type='button' class='btn btn-success'>Gespeichert</button>";
@@ -41,6 +42,8 @@ if (version_compare(PHP_VERSION, '5.5.0') < 0) {
 			while($row = mysql_fetch_object($checkdata))
 				{
 				$take=$row->id;
+				$hand=md5($_POST['c_email'].$take);
+				$change = "UPDATE customerNewsletter Set hash='".$hand."' WHERE id='$take'";					
 				}
 			}		
 
