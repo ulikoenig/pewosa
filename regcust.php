@@ -122,6 +122,7 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			//Hier Mail verschicken
 			$subject='Aktivierung Deines Presse-Kontos';
 			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unsere Pressemitteilungen zu abonnieren:\n ulikoenig.de/pewosa/regcust.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jeder Pressemitteilung selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
+			$body = htmlEscapeAndLinkUrls ( $body );
 			sendactivation($subject,$body,$c_email,$receiverName);
 		
 			}
@@ -158,7 +159,22 @@ function bcrypt_check ( $email, $password, $stored )
 		$found_id=0;
 
 
+
+		$query = "SELECT id, hash FROM customer WHERE email='christian.lewin@piratenfraktion-sh.de' LIMIT 1";
+		//echo "query: $query";
+		$checkdata = mysql_query($query);
+		if(mysql_num_rows($checkdata)>=1)
+			{
+			while($row = mysql_fetch_object($checkdata))
+				{
+				echo "hash: $row->hash<br><br>";
+				}
+			}
+
+
+
 		$query = "SELECT id,email FROM customer WHERE hash='$took' LIMIT 1";
+		//echo "query: $query";
 		$checkdata = mysql_query($query);
 		if(mysql_num_rows($checkdata)>=1)
 			{

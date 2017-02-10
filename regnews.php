@@ -88,7 +88,7 @@ function sendactivation($subject,$body,$receiverMail,$receiverName){
 			$subject='Aktivierung Deines Newsletter-Kontos';
 			$body = "Fast geschafft! Bitte klicke noch auf folgenden Link, um unseren Newsletter zu abonnieren:\n ulikoenig.de/pewosa/regnews.php?activationcode=".$activationcode."\n\nEinen Link zum Abbestellen findest Du in jedem Newsletter selbst.\n\n Viele Grüße\n\n Dein Piratenfraktionsteam";
 			
-			
+			$body = htmlEscapeAndLinkUrls ( $body );
 			sendactivation($subject,$body,$c_email,$receiverName);
 
 			}
