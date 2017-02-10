@@ -69,9 +69,9 @@ function sendnewsletter($subject,$body,$receiverMail,$receiverName){
 
 
 	
-	If (isset($_POST['newsletter']))
+	If (isset($_POST['newsletter']) OR isset($_GET['id']))
 		{
-		$take=$_POST['newsletter'];
+		If (isset($_POST['newsletter'])){$take=$_POST['newsletter'];}else{$take=$_GET['id'];}
 
 		If (isset($_POST['safe']) AND $take!='xxx')
 			{
@@ -156,7 +156,7 @@ function sendnewsletter($subject,$body,$receiverMail,$receiverName){
 			$sendstate='1';			
 			}	
 		}
-	If (!isset($_POST['newsletter']) OR $take=='xxx')
+	If ((!isset($_POST['newsletter']) AND !isset($_GET['id'])) OR $take=='xxx')
 		{
 		//Kein Datensatz festgelegt oder neu? - Erstmal Standardangaben zeigen	
 		$subject='';
@@ -197,7 +197,7 @@ function sendnewsletter($subject,$body,$receiverMail,$receiverName){
 	</tr><tr>
 	<?
 	echo "<td class='cell' colspan=1 bgcolor='#99ccff'>";
-	echo "<textarea class='form-control' $disabled name='c_body' value='' placeholder='Inhalt des Newsletters' rows='20'>$body</textarea></td>";
+	If ($disabled=='disabled'){echo "<p name='c_body' class='form-control' >".htmlentities($body)."</p></td>";}else{echo "<textarea class='form-control' $disabled name='c_body' value='' placeholder='Inhalt des Newsletters' rows='20'>$body</textarea></td>";}
 	echo "<td class='cell' colspan=1 bgcolor='#99ccff'>";
 	echo "<span class='form-control' style='overflow: auto;height:430px;'>$imout $body</span></td>";
 	?>

@@ -133,7 +133,7 @@ if($loggedinadmin == "1" OR $loggedinpressagent == "1")
 			$showsubjectlong = htmlspecialchars ($showsubject);
 			$showsubject = preg_replace("/[^ ]*$/", '.', substr($showsubject, 0, $length));
 			}	
-		$send_id='newsletter.php?id='.$take;
+		$send_id='newsletter_detail.php?id='.$take;
 		echo "<div class='panel-heading'>";	
 		echo "<a href='$send_id'><Font size='4'>$showsubject</font></a>";
 		echo "<div align='right'><form action='newsletter_detail.php' method='post'>";
