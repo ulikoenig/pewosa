@@ -20,7 +20,7 @@ function getFirstReleaser($pmid){
 }
 
 function getSecondReleaser($pmid){
-	$query = "SELECT `username` FROM `users`, `pressrelease` WHERE `pressrelease`.`id` =29 AND `users`.`distributor` =1 AND `pressrelease`.`confirmationid1` <> `users`.`id`;";
+	$query = "SELECT `username` FROM `users`, `pressrelease` WHERE `pressrelease`.`id` = ".$pmid." AND `users`.`distributor` =1 AND `pressrelease`.`confirmationid1` <> `users`.`id`;";
 	$checkdata = mysql_query ( $query );
 	$username = array();
 	if(mysql_num_rows($checkdata)>=1){
@@ -90,10 +90,11 @@ function newPM2ndReleaseRequest ($pmid){
 	(   'id' => $pmid,
 	    'pmTitle' => $subject,
 	    'msgtype' => NEWSECONDRELEASEREQUEST,
-	    'firstReleaseingUsername' => 'bernd'
+	    'firstReleaseingUsername' =>  getFirstReleaser($pmid)
 	);
 
 	foreach ($usernameArr as &$username) {
+		echo "<!-- USERNAME2 $username -->";
 		$fields = array
 		( 'to'=> '/topics/user'.$username,
 		  'data'            => $msg);

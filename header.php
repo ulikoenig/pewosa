@@ -42,24 +42,23 @@ if (mysql_num_rows ( $checkdata ) >= 1) {
 }
 
 echo "<title>PeWoSa - $pagetitle</title>";
-?> 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+?><!-- Latest compiled and minified CSS --><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- Optional theme --><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="paint.css"><!-- jQuery (necessary for Bootstrap's JavaScript plugins) --><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript --><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<?php
+if ($useFirepad){  
+	echo "<script src=\"https://www.gstatic.com/firebasejs/3.4.1/firebase.js\"></script>\n";
+	echo "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.19.0/codemirror.js\"></script>\n";
+	echo "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.19.0/codemirror.css\" />\n";
+	echo "<link rel=\"stylesheet\" href=\"https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css\" />\n";
+	echo "<script src=\"https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js\"></script>\n";
+	echo "<script src=\"include/firepad-userlist.js\"></script>";
+	echo "<link rel=\"stylesheet\" href=\"include/firepad-userlist.css\" />";
+	echo "<style>#firepad-container { width: 100%; height: 30em; } .powered-by-firepad {display: none;}  #userlist { position: absolute; right: 0; top: 0; bottom: 0; height: auto; width: 175px; }</style>\n";
+}
+?>
 
-<!-- Optional theme -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-
-<link rel="stylesheet" href="paint.css">
-
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<!-- Latest compiled and minified JavaScript -->
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style>
 .mainCol {
 	width: 100%
@@ -78,7 +77,13 @@ echo "body { padding-top: 50px; }";
 ?>
 </style>
 </head>
-<body>
+<?php
+if ($useFirepad) {
+	echo "<body onload=\"init()\">";
+} else {
+	echo "<body>";
+}
+?>
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -117,6 +122,8 @@ if (strpos ( $scriptName, 'messagelist.php' ) !== false) {
 	$nlabophpclass = "class=\"active\"";
 } else if (strpos ( $scriptName, 'nlabo.php' ) !== false) {
 	$nlabophpclass = "class=\"active\"";
+} else if (strpos ( $scriptName, 'csvimport.php' ) !== false) {
+	$csvimportphpclass = "class=\"active\"";
 }
 ;
 ?>
@@ -135,6 +142,7 @@ if ($loggedinadmin > "1" OR $loggedinpressagent > "1") {
 
 if ($loggedinadmin > "1") {
 	echo "            <li $userphpclass><a href=\"user.php\">Nutzer</a></li>";
+	echo "            <li $csvimportphpclass><a href=\"csvimport.php\">csv Import</a></li>";
 }
 ?>
 
@@ -147,7 +155,7 @@ if ($loggedinadmin > "1") {
 	<div class="container">
 		<div class="page-header">
 <?php
-echo "Angemeldet als <b>$loggedinusername</b><h1>$pagetitle</h1>";
+echo "<span class=\"noPrint\">Angemeldet als <b>$loggedinusername</b><h1>$pagetitle</h1></span>";
 
 
 ?>
