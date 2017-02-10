@@ -56,7 +56,8 @@ include_once("header.php");
 				{
 				$take=$row->id;
 				$hand=md5($_POST['c_email'].$take);
-				$change = "UPDATE customer Set hash='".$hand."' WHERE id='$take'";					
+				$change = "UPDATE customer Set hash='".$hand."' WHERE id='$take'";
+				$update = mysql_query($change)or die("Speichern leider fehlgeschlagen.".mysql_error());				
 				}
 			}		
 
