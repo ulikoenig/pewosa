@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteCond %{REQUEST_URI}  !(\.php)$
+RewriteRule (.*)  index.php?requestfile=$1 [L,QSA]
+RewriteCond %{REQUEST_URI}  (\.php)$
+RewriteRule (.*)  index.php?requestphp=$1 [L,QSA]
+
