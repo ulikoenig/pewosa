@@ -3,8 +3,9 @@ session_start();
 if (version_compare(PHP_VERSION, '5.5.0') < 0) {
     include_once("password.php");
 }
-
-include_once("config.php");
+if(!defined('MYSQLHOST')){
+	include_once("config.php");
+}
 
 $pdo = new PDO("mysql:host=".MYSQLHOST.";dbname=".MYSQLDB, MYSQLUSER, MYSQLPASS);
  
